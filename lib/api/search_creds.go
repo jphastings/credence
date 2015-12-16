@@ -25,6 +25,11 @@ func SearchCredHandler(w http.ResponseWriter, r *http.Request) {
   
   queryKeys := r.URL.Query()["key"]
 
+  if len(queryKeys) == 0 {
+    w.WriteHeader(http.StatusBadRequest)
+    return
+  }
+
   searchResult := &credence.SearchResult{}
 
   for _, key := range queryKeys {
