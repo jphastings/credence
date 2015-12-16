@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "cred.proto";
+
+package credence;
+// A List of the keys searched for and the breakdown of Credence'd
+// belief of the various creds underneath them
+message SearchResult {
+  message AssertionBreakdown {
+    float no_comment = 1;
+    float is_true = 2;
+    float is_false = 3;
+    float is_ambiguous = 4;
+
+    // TODO: include this directly from cred?
+    oneof statement {
+      Cred.HumanReadableStatement human_readable = 6;
+      Cred.CredSeenStatement cred_seen = 7;
+      Cred.ApplicationSpecificStatement application_specific = 8;
+      Cred.IdentityDeclarationStatement identity_declaration = 9;
+    }
+  }
+
+  message KeyBreakdown {
+    string key = 1;
+    repeated AssertionBreakdown assertions = 2;
+  }
+
+  repeated KeyBreakdown results = 1;
+}

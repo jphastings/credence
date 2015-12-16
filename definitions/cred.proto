@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package credence;
+// A cred is a definition of a statement, and a timestamped
+// assertion as to whether the author believes it to be
+// factually correct, incorrect, ambiguous or something
+// explicitly worth not commenting on.
+message Cred {
+  message HumanReadableStatement {
+    string statement = 1;  
+  }
+  message CredSeenStatement {
+    string cred_hash = 1;  
+  }
+  message ApplicationSpecificStatement {
+    bytes statement = 1;
+    // A URI which can be used to determine what application created the statement
+    string application_uri = 2;
+  }
+  message IdentityDeclarationStatement {
+    // A public key in DER format which can be used to check the
+    // signature of this message to confirm it's veracity
+    bytes public_key = 1;
+    // The identity being referenced eg. the URI for a twitter handle 
+    string identity_uri = 2;
+  }
+
+  enum AssertionType {
+    NO_COMMENT = 0;
+    IS_TRUE = 1;
+    IS_FALSE = 2;
+    IS_AMBIGUOUS = 3;
+  }
+
+  // A list of keys that should be indexed for search so this cred can be found
+  repeated string keys = 1;
+  // UNIX epoch of the time this cred was created
+  int64 timestamp = 2;
+  // Whether we are asserting the statement is true, false, ambiguous or we're making a null assertion.
+  AssertionType assertion = 3;
+  // An optional URI which the author claims proves the assertion as to the statement.
+  string proof_uri = 4;
+  // The DSA Signature of this protobuf encoded cred (while signature is set to empty string)
+  bytes signature = 5;
+
+  // No statement is the equivalent of an "I exist"
+  // which could be false (if your private key is compomised)
+  // or no comment which is the equivalent of a cred no-op.
+  oneof statement {
+    HumanReadableStatement human_readable = 6;
+    CredSeenStatement cred_seen = 7;
+    ApplicationSpecificStatement application_specific = 8;
+    IdentityDeclarationStatement identity_declaration = 9;
+  }
+}

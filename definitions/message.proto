@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "cred.proto";
+import "search_request.proto";
+
+package credence;
+// A container for all the messages which can be sent
+message Message {
+  oneof type {
+    Cred cred = 1;
+    SearchRequest search_request = 2;
+  }
+}

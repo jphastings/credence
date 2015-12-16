@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package credence;
+// A search request defines a request of a cred store
+// to look for any creds with the given key and publish them.
+message SearchRequest {
+  // A list of keys that the requesting system would like repeated
+  repeated string keys = 1;
+  // The time the request was issued (used for determining if a response is worthwhile)
+  int64 timestamp = 2;
+  // The number of times this request has been passed on
+  int32 proximity = 3;
+}
