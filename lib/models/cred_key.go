@@ -40,7 +40,6 @@ func SearchCredKeys(key string) []*credence.SearchResult_KeyBreakdown {
       &breakdown.Recognised,
     )
 
-    // TODO: Don't duplicate key breakdowns for the same key
     assertions := []*credence.SearchResult_AssertionBreakdown{&breakdown}
     keyBreakdown := credence.SearchResult_KeyBreakdown{
       Key: key,

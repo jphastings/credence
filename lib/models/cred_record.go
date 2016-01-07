@@ -2,8 +2,6 @@ package models
 
 import (
   "time"
-  "crypto/sha1"
-  "encoding/hex"
   "database/sql"
   "github.com/golang/protobuf/proto"
   "github.com/jphastings/credence/lib/definitions/credence"
@@ -49,7 +47,7 @@ func StoreCred (cred *credence.Cred) {
   credRecord := CredRecord{
     AuthorID: sql.NullInt64{Valid: false},
     CredBytes: credBytes,
-    StatementHash: StatementHashFor(cred),
+    StatementHash: cred.StatementHash(),
     Keys: keys,
 
     NoComment: cred.Assertion == credence.Cred_NO_COMMENT,
@@ -59,20 +57,4 @@ func StoreCred (cred *credence.Cred) {
   }
 
   db.Create(&credRecord)
-}
-
-func StatementHashFor(cred *credence.Cred) string {
-  statementCred := &credence.Cred{
-    Statement: cred.Statement,
-  }
-
-  statementCredBytes, err := proto.Marshal(statementCred)
-  if err != nil {
-    // TODO: Deal with error
-    panic(err)
-  }
-
-  hash := sha1.New()
-  hash.Write(statementCredBytes) 
-  return hex.EncodeToString(hash.Sum(nil))
 }
