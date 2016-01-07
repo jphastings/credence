@@ -6,10 +6,10 @@ import (
   "time"
   "net/http"
   "github.com/zeromq/goczmq"
-  // "github.com/spacemonkeygo/openssl"
   "github.com/golang/protobuf/proto"
   "github.com/golang/protobuf/jsonpb"
   "github.com/jphastings/credence/lib/definitions/credence"
+  "github.com/jphastings/credence/lib/models"
 )
 
 func CredHandler(w http.ResponseWriter, r *http.Request) {
@@ -57,6 +57,9 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
   cred.Timestamp = time.Now().Unix()
   cred.Signature = []byte{0x1f, 0x8b}
 
+  // Store in the DB
+  models.StoreCred(cred)
+
   // Set up the broadcaster
   broadcaster, err := goczmq.NewPush("inproc://broadcast")
   if err != nil {
@@ -83,9 +86,23 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
       panic(err)
   }
 
+  var credMarshaled string
+
   // Respond over HTTP
+  switch r.Header.Get("Accept") {
+  case "application/vnd.google.protobuf":
+    w.Header().Set("Content-Type", "application/vnd.google.protobuf")
+    credBytes, _ := proto.Marshal(cred)
+    credMarshaled = string(credBytes)
+  case "application/json":
+    w.Header().Set("Content-Type", "application/json")
+    marshaler := jsonpb.Marshaler{}
+    credMarshaled, _ = marshaler.MarshalToString(cred)
+  default:
+    w.WriteHeader(http.StatusNotAcceptable)
+    return
+  }
+  
   w.WriteHeader(http.StatusCreated)
-  marshaler := jsonpb.Marshaler{}
-  credJson, _ := marshaler.MarshalToString(cred)
-  io.WriteString(w, credJson)
+  io.WriteString(w, credMarshaled)
 }

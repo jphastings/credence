@@ -7,17 +7,21 @@ package credence;
 // belief of the various creds underneath them
 message SearchResult {
   message AssertionBreakdown {
-    float no_comment = 1;
-    float is_true = 2;
-    float is_false = 3;
-    float is_ambiguous = 4;
+    string infohash = 1;
+
+    int64 no_comment = 2;
+    int64 is_true = 3;
+    int64 is_false = 4;
+    int64 is_ambiguous = 5;
+
+    int64 recognised = 6;
 
     // TODO: include this directly from cred?
     oneof statement {
-      Cred.HumanReadableStatement human_readable = 6;
-      Cred.CredSeenStatement cred_seen = 7;
-      Cred.ApplicationSpecificStatement application_specific = 8;
-      Cred.IdentityDeclarationStatement identity_declaration = 9;
+      Cred.HumanReadableStatement human_readable = 7;
+      Cred.CredSeenStatement cred_seen = 8;
+      Cred.ApplicationSpecificStatement application_specific = 9;
+      Cred.IdentityDeclarationStatement identity_declaration = 10;
     }
   }
 
