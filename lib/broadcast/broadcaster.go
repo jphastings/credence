@@ -33,6 +33,8 @@ func StartBroadcaster(wg sync.WaitGroup) {
       continue
     }
 
+    log.Print("Broadcasting message")
+
     _, err = broadcaster.Write(msgBytes)
     if err != nil {
       panic(err)
