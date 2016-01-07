@@ -32,17 +32,19 @@ func SearchCredHandler(w http.ResponseWriter, r *http.Request) {
 
   searchResult := &credence.SearchResult{}
 
+  // TODO: unduplicate keys
   for _, key := range queryKeys {
-    keyBreakdown := &credence.SearchResult_KeyBreakdown {
-      Key: key,
+    for _, keyBreakdown := range models.SearchCredKeys(key) {
+      searchResult.Results = append(searchResult.Results, keyBreakdown)
     }
-    searchResult.Results = append(searchResult.Results, keyBreakdown)
   }
   
   // Output
-  w.WriteHeader(http.StatusOK)
   marshaler := jsonpb.Marshaler{}
   json, _ := marshaler.MarshalToString(searchResult)
+
+  w.Header().Set("Content-Type", "application/json")
+  w.WriteHeader(http.StatusOK)
   io.WriteString(w, json)
 }
 

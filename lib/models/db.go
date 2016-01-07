@@ -21,7 +21,3 @@ func init() {
     &CredKey{},
   )
 }
-
-func DB() {
-  db.DB()
-}

@@ -4,6 +4,7 @@ import (
   "time"
   "crypto/sha1"
   "encoding/hex"
+  "database/sql"
   "github.com/golang/protobuf/proto"
   "github.com/jphastings/credence/lib/definitions/credence"
 )
@@ -14,8 +15,9 @@ type CredRecord struct {
   CredBytes []byte 
   // The detected author of this cred
   Author User
+  AuthorID sql.NullInt64
   // An identifier for this statement in this context; the hash of the keys and statement
-  Mark string
+  StatementHash string
   // The time this cred was received
   ReceivedAt time.Time
 
@@ -45,8 +47,9 @@ func StoreCred (cred *credence.Cred) {
   }
 
   credRecord := CredRecord{
+    AuthorID: sql.NullInt64{Valid: false},
     CredBytes: credBytes,
-    Mark: MarkFor(cred),
+    StatementHash: StatementHashFor(cred),
     Keys: keys,
 
     NoComment: cred.Assertion == credence.Cred_NO_COMMENT,
@@ -58,19 +61,18 @@ func StoreCred (cred *credence.Cred) {
   db.Create(&credRecord)
 }
 
-func MarkFor(cred *credence.Cred) string {
-  markCred := &credence.Cred{
-    Keys: cred.Keys,
+func StatementHashFor(cred *credence.Cred) string {
+  statementCred := &credence.Cred{
     Statement: cred.Statement,
   }
 
-  markCredBytes, err := proto.Marshal(markCred)
+  statementCredBytes, err := proto.Marshal(statementCred)
   if err != nil {
     // TODO: Deal with error
     panic(err)
   }
 
   hash := sha1.New()
-  hash.Write(markCredBytes) 
+  hash.Write(statementCredBytes) 
   return hex.EncodeToString(hash.Sum(nil))
 }
