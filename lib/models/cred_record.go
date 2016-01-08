@@ -34,8 +34,13 @@ func (credRecord CredRecord) Cred() (*credence.Cred) {
  return cred
 }
 
-func StoreCred (cred *credence.Cred) {
-  // TODO: Determine Author
+func StoreCredUnknownAuthor(cred *credence.Cred) {
+  // TODO: Find author
+  panic("Not implemented")
+  // sql.NullInt64{Valid: false} may be useful?
+}
+
+func StoreCredWithAuthor(cred *credence.Cred, author User) {
   credBytes, _ := proto.Marshal(cred)
 
   var keys []CredKey
@@ -45,7 +50,7 @@ func StoreCred (cred *credence.Cred) {
   }
 
   credRecord := CredRecord{
-    AuthorID: sql.NullInt64{Valid: false},
+    Author: author,
     CredBytes: credBytes,
     StatementHash: cred.StatementHash(),
     Keys: keys,

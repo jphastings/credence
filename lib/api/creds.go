@@ -93,10 +93,10 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
 
   // Set attributes
   cred.Timestamp = time.Now().Unix()
-  cred.Signature = []byte{0x1f, 0x8b}
+  cred.SetSignature()
 
   // Store in the DB
-  models.StoreCred(cred)
+  models.StoreCredWithAuthor(cred, models.Me())
 
   // Set up the broadcaster
   broadcaster, err := goczmq.NewPush("inproc://broadcast")

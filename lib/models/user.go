@@ -11,3 +11,9 @@ type User struct {
   IdentityUri string
   Weight int
 }
+
+func Me() User {
+  user := &User{}
+  db.First(&user, 1)
+  return *user
+}
