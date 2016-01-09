@@ -10,11 +10,16 @@ import (
 
 var config Config
 
+func ConfigFile(filename string) string {
+  usr, _ := user.Current()
+  path := filepath.Join(usr.HomeDir, ".credence", filename)
+  return path
+}
+
 func Read() Config {
   emptyConfig := Config{}
   if config == emptyConfig {
-    usr, _ := user.Current()
-    configPath := filepath.Join(usr.HomeDir, ".credence", "settings.config")
+    configPath := ConfigFile("settings.config")
 
     err := gcfg.ReadFileInto(&config, configPath)
     if err != nil {

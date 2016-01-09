@@ -1,23 +1,21 @@
-package config
+package helpers
 
 import (
-  "os/user"
   "io/ioutil"
   "encoding/hex"
-  "path/filepath"
   "github.com/spacemonkeygo/openssl"
   "github.com/jphastings/credence/lib/models"
+  "github.com/jphastings/credence/lib/config"
 )
 
 var privateKey openssl.PrivateKey
 var privateKeyLoaded bool = false
 
 func PemPath() string {
-  usr, _ := user.Current()
-  return filepath.Join(usr.HomeDir, ".credence", "id_rsa")
+  return config.ConfigFile("id_rsa")
 }
 
-func PrivateKey() (openssl.PrivateKey, error) {
+func LoadPrivateKey() (openssl.PrivateKey, error) {
   var err error
 
   if !privateKeyLoaded {

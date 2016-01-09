@@ -4,7 +4,6 @@ import (
   "encoding/hex"
   "github.com/golang/protobuf/proto"
   "github.com/spacemonkeygo/openssl"
-  "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/models"
   "github.com/jphastings/credence/lib/definitions/credence"
 )
@@ -30,7 +29,7 @@ func StatementHash(cred *credence.Cred) string {
 func SetSignature(cred *credence.Cred) error {
   sigCredBytes := SignableCredBytes(cred)
 
-  privateKey, err := config.PrivateKey()
+  privateKey, err := LoadPrivateKey()
   if err != nil {
     return err
   }
