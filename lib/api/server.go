@@ -14,6 +14,8 @@ func StartAPI(wg sync.WaitGroup) {
   listenUri := fmt.Sprintf("%s:%d", config.Server.Host, config.Server.Port)
 
   http.HandleFunc("/creds", CredHandler)
+  static := http.FileServer(http.Dir("htdocs"))
+  http.Handle("/", static)
   fmt.Println("Webservice started on", listenUri)
   panic(http.ListenAndServe(listenUri, nil))
 }
