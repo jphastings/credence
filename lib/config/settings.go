@@ -2,6 +2,7 @@ package config
 
 import (
   "os"
+  "flag"
   "os/user"
   "path/filepath"
   "io/ioutil"
@@ -9,11 +10,17 @@ import (
 )
 
 var config Config
+var configDir string
+
+func init() {
+  usr, _ := user.Current()
+  defaultDir := filepath.Join(usr.HomeDir, ".credence")
+  flag.StringVar(&configDir, "config", defaultDir, "the directory config is stored in")
+  flag.Parse()
+}
 
 func ConfigFile(filename string) string {
-  usr, _ := user.Current()
-  path := filepath.Join(usr.HomeDir, ".credence", filename)
-  return path
+  return filepath.Join(configDir, filename)
 }
 
 func Read() Config {
