@@ -28,14 +28,7 @@ func StatementHash(cred *credence.Cred) string {
 }
 
 func SetSignature(cred *credence.Cred) error {
-  sigCred := &credence.Cred{}
-  sigCred = cred
-  sigCred.Signature = []byte{}
-
-  sigCredBytes, err := proto.Marshal(sigCred)
-  if err != nil {
-    return err
-  }
+  sigCredBytes := SignableCredBytes(cred)
 
   privateKey, err := config.PrivateKey()
   if err != nil {
@@ -50,7 +43,39 @@ func SetSignature(cred *credence.Cred) error {
   return nil
 }
 
+func SignableCredBytes(cred *credence.Cred) []byte {
+  sigCred := &credence.Cred{}
+  *sigCred = *cred
+  sigCred.Signature = []byte{}
+
+  sigCredBytes, err := proto.Marshal(sigCred)
+  if err != nil {
+    panic(err)
+  }
+
+  return sigCredBytes
+}
+
 func DetectAuthor(cred *credence.Cred) models.User {
-  return models.Me()
+  db := models.DB()
+  users := []models.User{}
+  db.Where("public_key IS NOT NULL").Find(&users)
+
+  author := models.User{}
+
+  sigCredByte := SignableCredBytes(cred)
+
+  for _, user := range users {
+    publicKey, err := openssl.LoadPublicKeyFromPEM(user.PublicKey)
+    if err == nil {
+      verifyErr := publicKey.VerifyPKCS1v15(openssl.SHA256_Method, sigCredByte, cred.Signature)
+      if verifyErr == nil {
+        author = user
+        break
+      }
+    }
+  }
+
+  return author
 }
 
