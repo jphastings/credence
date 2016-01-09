@@ -1,17 +1,21 @@
 package api
 
 import (
-  "log"
+  "fmt"
   "sync"
   "net/http"
+  "github.com/jphastings/credence/lib/config"
 )
 
 func StartAPI(wg sync.WaitGroup) {
   defer wg.Done()
 
+  config := config.Read()
+  listenUri := fmt.Sprintf("%s:%d", config.Server.Host, config.Server.Port)
+
   http.HandleFunc("/creds", CredHandler)
-  log.Print("Webservice started on 127.0.0.1:8808")
-  panic(http.ListenAndServe("127.0.0.1:8808", nil))
+  fmt.Println("Webservice started on", listenUri)
+  panic(http.ListenAndServe(listenUri, nil))
 }
 
 func MethodNotAllowed(w http.ResponseWriter, r *http.Request) {

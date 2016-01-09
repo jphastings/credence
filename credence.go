@@ -2,11 +2,14 @@ package main
 
 import (
   "sync"
+  "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/api"
   "github.com/jphastings/credence/lib/broadcast"
 )
 
 func main() {
+  config.Read()
+
   var wg sync.WaitGroup
   wg.Add(2)
 
