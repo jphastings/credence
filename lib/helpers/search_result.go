@@ -1,6 +1,10 @@
-package credence
+package helpers
 
-func (searchResult *SearchResult) DeduplicateKeys() {
+import (
+  "github.com/jphastings/credence/lib/definitions/credence"
+)
+
+func DeduplicateKeys(searchResult *credence.SearchResult) {
   dedupedKeyMap := make(map[string]int)
 
   for i, keyBreakdown := range searchResult.Results {
@@ -14,7 +18,7 @@ func (searchResult *SearchResult) DeduplicateKeys() {
     }
   }
 
-  newResults := []*SearchResult_KeyBreakdown{}
+  newResults := []*credence.SearchResult_KeyBreakdown{}
 
   for _, index := range dedupedKeyMap {
     newResults = append(newResults, searchResult.Results[index])

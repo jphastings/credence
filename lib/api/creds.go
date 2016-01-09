@@ -8,8 +8,9 @@ import (
   "github.com/zeromq/goczmq"
   "github.com/golang/protobuf/proto"
   "github.com/golang/protobuf/jsonpb"
-  "github.com/jphastings/credence/lib/definitions/credence"
   "github.com/jphastings/credence/lib/models"
+  "github.com/jphastings/credence/lib/helpers"
+  "github.com/jphastings/credence/lib/definitions/credence"
 )
 
 var broadcaster *goczmq.Channeler
@@ -73,7 +74,7 @@ func SearchCredHandler(w http.ResponseWriter, r *http.Request) {
     }
   }
 
-  searchResult.DeduplicateKeys()
+  helpers.DeduplicateKeys(searchResult)
   
   // Output
   marshaler := jsonpb.Marshaler{}
@@ -93,10 +94,13 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
 
   // Set attributes
   cred.Timestamp = time.Now().Unix()
-  cred.SetSignature()
+  err := helpers.SetSignature(cred)
+  if err != nil {
+    panic(err)
+  }
 
   // Store in the DB
-  models.StoreCredWithAuthor(cred, models.Me())
+  helpers.StoreCredWithAuthor(cred, models.Me())
 
   // Set up the broadcaster
   broadcaster, err := goczmq.NewPush("inproc://broadcast")

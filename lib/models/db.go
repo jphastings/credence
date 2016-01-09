@@ -21,3 +21,7 @@ func init() {
     &CredKey{},
   )
 }
+
+func DB() gorm.DB {
+  return db
+}

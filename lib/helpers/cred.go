@@ -1,34 +1,34 @@
-package credence
+package helpers
 
 import (
   "encoding/hex"
   "github.com/golang/protobuf/proto"
   "github.com/spacemonkeygo/openssl"
+  "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/models"
+  "github.com/jphastings/credence/lib/definitions/credence"
 )
 
-func (cred *Cred) StatementHash() string {
-  statementCred := &Cred{
+func StatementHash(cred *credence.Cred) string {
+  statementCred := &credence.Cred{
     Statement: cred.Statement,
   }
 
   statementCredBytes, err := proto.Marshal(statementCred)
   if err != nil {
-    // TODO: Deal with error
     panic(err)
   }
 
-  hash, _ := openssl.SHA1(statementCredBytes)
-  hashBytes := []byte{}
-  for _, b := range hash {
-    hashBytes = append(hashBytes, b)
+  hash, err := openssl.SHA1(statementCredBytes)
+  if err != nil {
+    panic(err)
   }
 
-  return hex.EncodeToString(hashBytes)
+  return hex.EncodeToString(hash[:])
 }
 
-func (cred *Cred) SetSignature() error {
-  sigCred := &Cred{}
+func SetSignature(cred *credence.Cred) error {
+  sigCred := &credence.Cred{}
   sigCred = cred
   sigCred.Signature = []byte{}
 
@@ -50,7 +50,7 @@ func (cred *Cred) SetSignature() error {
   return nil
 }
 
-func (cred *Cred) DetectAuthor() model.User {
-
+func DetectAuthor(cred *credence.Cred) models.User {
+  return models.Me()
 }
 

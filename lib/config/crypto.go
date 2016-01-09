@@ -6,6 +6,7 @@ import (
   "encoding/hex"
   "path/filepath"
   "github.com/spacemonkeygo/openssl"
+  "github.com/jphastings/credence/lib/models"
 )
 
 var privateKey openssl.PrivateKey
@@ -43,14 +44,21 @@ func CreatePrivateKey() openssl.PrivateKey {
 
   ioutil.WriteFile(PemPath(), pemBlock, 0600)
 
-  publicPemBlock, err := privateKey.PublicKey.MarshalPKIXPublicKeyPEM()
+  publicPemBlock, err := privateKey.MarshalPKIXPublicKeyPEM()
+  if err != nil {
+    panic(err)
+  }
+
+  fingerprint, err := openssl.SHA1(publicPemBlock)
   if err != nil {
     panic(err)
   }
 
   me := models.Me()
   me.PublicKey = publicPemBlock
-  me.Fingerprint = hex.EncodeToString(openssl.SHA1(publicPemBlock))
+  me.Fingerprint = hex.EncodeToString(fingerprint[:])
+  db := models.DB()
+  db.Save(&me)
 
   return privateKey
 }
