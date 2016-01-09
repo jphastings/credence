@@ -12,11 +12,13 @@ import (
 var config Config
 var configDir string
 
-func init() {
+func Setup() {
   usr, _ := user.Current()
   defaultDir := filepath.Join(usr.HomeDir, ".credence")
   flag.StringVar(&configDir, "config", defaultDir, "the directory config is stored in")
   flag.Parse()
+
+  os.MkdirAll(configDir, 0700)
 }
 
 func ConfigFile(filename string) string {
@@ -49,8 +51,6 @@ func WriteDefaultConfig(configPath string, config *Config) {
 Host=127.0.0.1
 Port=8808
 `
-
-  os.MkdirAll(filepath.Dir(configPath), 0700)
 
   err := ioutil.WriteFile(configPath, []byte(cfgStr), 0600)
   if err != nil {

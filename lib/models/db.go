@@ -8,7 +8,7 @@ import (
 
 var db gorm.DB
 
-func init() {
+func Setup() {
   var err error
   dbPath := config.ConfigFile("credence.db")
   db, err = gorm.Open("sqlite3", dbPath)
