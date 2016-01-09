@@ -3,6 +3,7 @@ package config
 import (
   "os/user"
   "io/ioutil"
+  "encoding/hex"
   "path/filepath"
   "github.com/spacemonkeygo/openssl"
 )
@@ -36,12 +37,20 @@ func PrivateKey() (openssl.PrivateKey, error) {
 func CreatePrivateKey() openssl.PrivateKey {
   privateKey, _ := openssl.GenerateRSAKey(2048)
   pemBlock, err := privateKey.MarshalPKCS1PrivateKeyPEM()
-
   if err != nil {
     panic(err)
   }
 
   ioutil.WriteFile(PemPath(), pemBlock, 0600)
+
+  publicPemBlock, err := privateKey.PublicKey.MarshalPKIXPublicKeyPEM()
+  if err != nil {
+    panic(err)
+  }
+
+  me := models.Me()
+  me.PublicKey = publicPemBlock
+  me.Fingerprint = hex.EncodeToString(openssl.SHA1(publicPemBlock))
 
   return privateKey
 }
