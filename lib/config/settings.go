@@ -19,6 +19,7 @@ func Setup() {
   flag.Parse()
 
   os.MkdirAll(configDir, 0700)
+  Read()
 }
 
 func ConfigFile(filename string) string {
@@ -43,6 +44,13 @@ type Config struct {
     Host string
     Port int
   }
+  Broadcaster struct {
+    Host string
+    Port int
+  }
+  SearchRequests struct {
+    ForwardProximityLimit int32
+  }
 }
 
 func WriteDefaultConfig(configPath string, config *Config) {
@@ -50,6 +58,11 @@ func WriteDefaultConfig(configPath string, config *Config) {
 [Server]
 Host=127.0.0.1
 Port=8808
+[Broadcaster]
+Host=0.0.0.0
+Port=9099
+[SearchRequests]
+ForwardProximityLimit=3
 `
 
   err := ioutil.WriteFile(configPath, []byte(cfgStr), 0600)

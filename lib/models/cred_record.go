@@ -23,6 +23,8 @@ type CredRecord struct {
   IsTrue bool
   IsFalse bool
   IsAmbiguous bool
+
+  Seen int `sql:"DEFAULT:1"`
 }
 
 func (credRecord CredRecord) Cred() (*credence.Cred) {

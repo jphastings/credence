@@ -7,8 +7,8 @@ import (
 )
 
 func StoreCredUnknownAuthor(cred *credence.Cred) {
-  // TODO: Find author
-  panic("Not implemented")
+  author := DetectAuthor(cred)
+  StoreCredWithAuthor(cred, author)
   // sql.NullInt64{Valid: false} may be useful?
 }
 
@@ -20,6 +20,10 @@ func StoreCredWithAuthor(cred *credence.Cred, author models.User) {
     keyObj := models.CredKey { Key: key }
     keys = append(keys, keyObj)
   }
+
+  db := models.DB()
+
+  // TODO: increment 'Seen' if a cred record already exists
 
   credRecord := models.CredRecord{
     Author: author,
@@ -33,6 +37,5 @@ func StoreCredWithAuthor(cred *credence.Cred, author models.User) {
     IsAmbiguous: cred.Assertion == credence.Cred_IS_AMBIGUOUS,
   }
 
-  db := models.DB()
   db.Create(&credRecord)
 }
