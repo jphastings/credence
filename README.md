@@ -46,6 +46,9 @@ Credence aims to be a mechanism for bringing our own networks of belief-in-accur
 Credence is a background service written in go. Once you have go installed you should clone this repo and use the Makefile to compile it.
 
 ```bash
+brew install libsodium czmq
+brew install --devel protobuf
+
 cd $GOPATH/src
 git clone https://github.com/jphastings/credence.git github.com/jphastings/credence
 cd github.com/jphastings/credence

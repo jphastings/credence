@@ -1,7 +1,7 @@
 GOPATH := ${PWD}/_vendor:${GOPATH}
 export GOPATH
 
-.PHONY: definitions dependencies bootstrap
+.PHONY: dependencies definitions bootstrap
 
 default: build
 
