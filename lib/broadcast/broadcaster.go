@@ -16,7 +16,7 @@ func Setup() {
   broadcastUri := fmt.Sprintf("tcp://%s:%d", config.Broadcaster.Host, config.Broadcaster.Port)
 
   var err error
-  broadcaster, err = goczmq.NewPush(broadcastUri)
+  broadcaster, err = goczmq.NewPub(broadcastUri)
   if err != nil {
     panic(err)
   }

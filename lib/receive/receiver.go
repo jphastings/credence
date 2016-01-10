@@ -21,18 +21,8 @@ func Setup() {
     panic(err)
   }
 
-  // TODO: Remove, only for debug
-  config := config.Read()
-
-  var attachUri string
-
-  if config.Broadcaster.Port == 9099 {
-    attachUri = ""
-  } else {
-    attachUri = "tcp://0.0.0.0:9099"
-  }
-
-  receiver, err = goczmq.NewPull(attachUri)
+  receiver = goczmq.NewSock(goczmq.Sub)
+  receiver.SetSubscribe("")
   if err != nil {
     panic(err)
   }
