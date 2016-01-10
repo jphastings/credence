@@ -53,8 +53,9 @@ func SearchCredHandler(w http.ResponseWriter, r *http.Request) {
 
   searchResult := &credence.SearchResult{}
 
+  // TODO: Do DB query for all keys at once
   for _, key := range searchRequest.Keys {
-    for _, keyBreakdown := range models.SearchCredKeys(key) {
+    for _, keyBreakdown := range models.SearchCredKeysBreakdown(key) {
       searchResult.Results = append(searchResult.Results, keyBreakdown)
     }
   }

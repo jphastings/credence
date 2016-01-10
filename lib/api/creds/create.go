@@ -14,6 +14,7 @@ import (
 )
 
 func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
+  // TODO: Prevent making the same cred a second time
   cred := &credence.Cred{}
   if err := jsonpb.Unmarshal(r.Body, cred); err != nil {
     w.WriteHeader(http.StatusBadRequest)

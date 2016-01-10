@@ -10,7 +10,28 @@ type CredKey struct {
   Key string
 }
 
-func SearchCredKeys(key string) []*credence.SearchResult_KeyBreakdown {
+// TODO: multiple LIKEs at once
+
+func SearchCredKeys(key string) []*credence.Cred {
+  var (
+    results []*credence.Cred
+    rows []*CredRecord
+  )
+
+  db.
+    Select("cred_bytes").
+    Joins("left join cred_keys on cred_keys.cred_record_id = cred_records.id").
+    Where("key LIKE ?", key).
+    Find(&rows)
+
+  for _, credRecord := range rows {
+    results = append(results, credRecord.Cred())
+  }
+
+  return results
+}
+
+func SearchCredKeysBreakdown(key string) []*credence.SearchResult_KeyBreakdown {
   var results []*credence.SearchResult_KeyBreakdown
 
   rows, err := db.

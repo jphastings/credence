@@ -7,6 +7,7 @@ import (
   "github.com/zeromq/goczmq"
   "github.com/golang/protobuf/proto"
   "github.com/jphastings/credence/lib/config"
+  "github.com/jphastings/credence/lib/models"
   "github.com/jphastings/credence/lib/helpers"
   "github.com/jphastings/credence/lib/definitions/credence"
 )
@@ -68,7 +69,7 @@ func RouteMessage(message *credence.Message) {
   cred := message.GetCred()
   if cred != nil {
     if helpers.StoreCredUnknownAuthor(cred) {
-      RebroadcastMessage(message)
+      BroadcastMessage(message)
     }
   }
 
@@ -78,12 +79,24 @@ func RouteMessage(message *credence.Message) {
 
     if searchRequest.Proximity <= config.SearchRequests.ForwardProximityLimit {
       searchRequest.Proximity += 1
-      RebroadcastMessage(message)
+      BroadcastMessage(message)
+
+      for _, key := range searchRequest.Keys {
+        for _, cred := range models.SearchCredKeys(key) {
+          credMsg := &credence.Message{
+            Type: &credence.Message_Cred{
+              Cred: cred,
+            },
+          }
+
+          BroadcastMessage(credMsg)
+        }
+      }
     }
   }
 }
 
-func RebroadcastMessage(message *credence.Message) {
+func BroadcastMessage(message *credence.Message) {
   msgBytes, _ := proto.Marshal(message)
   _, err := broadcaster.Write(msgBytes)
   if err != nil {
