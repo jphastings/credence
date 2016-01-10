@@ -1,0 +1,3 @@
+#!/bin/bash
+cat template.config envsubst > settings/config
+/go/bin/credence --config ./

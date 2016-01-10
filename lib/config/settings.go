@@ -44,6 +44,10 @@ type Config struct {
     Host string
     Port int
   }
+  DB struct {
+    Type string
+    ConnectionString string
+  }
   Broadcaster struct {
     Host string
     Port int
@@ -58,6 +62,9 @@ func WriteDefaultConfig(configPath string, config *Config) {
 [Server]
 Host=127.0.0.1
 Port=8808
+[DB]
+Type=sqlite3
+ConnectionString=credence.db
 [Broadcaster]
 Host=0.0.0.0
 Port=9099
