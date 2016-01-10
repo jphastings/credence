@@ -63,9 +63,13 @@ func ConnectToBroadcaster(uri string) {
 func RouteMessage(message *credence.Message) {
   config := config.Read()
 
+  log.Println("Routing message", message)
+
   cred := message.GetCred()
   if cred != nil {
-    helpers.StoreCredUnknownAuthor(cred)
+    if helpers.StoreCredUnknownAuthor(cred) {
+      RebroadcastMessage(message)
+    }
   }
 
   searchRequest := message.GetSearchRequest()
@@ -74,7 +78,6 @@ func RouteMessage(message *credence.Message) {
 
     if searchRequest.Proximity <= config.SearchRequests.ForwardProximityLimit {
       searchRequest.Proximity += 1
-      log.Print(message)
       RebroadcastMessage(message)
     }
   }

@@ -22,6 +22,8 @@ func Setup() {
     &CredRecord{},
     &CredKey{},
   )
+
+  db.Model(&CredRecord{}).AddUniqueIndex("idx_cred_bytes", "cred_bytes")
 }
 
 func DB() gorm.DB {
