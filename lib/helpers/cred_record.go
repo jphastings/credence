@@ -1,6 +1,7 @@
 package helpers
 
 import (
+  "time"
   "github.com/golang/protobuf/proto"
   "github.com/jphastings/credence/lib/models"
   "github.com/jphastings/credence/lib/definitions/credence"
@@ -29,6 +30,7 @@ func StoreCredWithAuthor(cred *credence.Cred, author models.User) bool {
     credRecord.Author = author
     credRecord.StatementHash = StatementHash(cred)
     credRecord.Keys = keys
+    credRecord.ReceivedAt = time.Now()
     
     credRecord.NoComment = cred.Assertion == credence.Cred_NO_COMMENT
     credRecord.IsTrue = cred.Assertion == credence.Cred_IS_TRUE

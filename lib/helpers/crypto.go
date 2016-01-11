@@ -1,6 +1,7 @@
 package helpers
 
 import (
+  "os"
   "io/ioutil"
   "encoding/hex"
   "github.com/spacemonkeygo/openssl"
@@ -60,3 +61,9 @@ func CreatePrivateKey() openssl.PrivateKey {
 
   return privateKey
 }
+
+func HasPrivateKey() bool {
+  _, err := os.Stat(PemPath())
+  return err == nil
+}
+
