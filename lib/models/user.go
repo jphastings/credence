@@ -14,6 +14,6 @@ type User struct {
 
 func Me() User {
   user := &User{}
-  db.First(&user, 1)
+  db.FirstOrCreate(&user, User{ID: 1})
   return *user
 }

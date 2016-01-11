@@ -5,6 +5,7 @@ import (
   "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/models"
   "github.com/jphastings/credence/lib/api"
+  "github.com/jphastings/credence/lib/helpers"
   "github.com/jphastings/credence/lib/broadcast"
   "github.com/jphastings/credence/lib/receive"
 )
@@ -14,6 +15,7 @@ func main() {
   models.Setup()
   broadcast.Setup()
   receive.Setup()
+  helpers.SavePublicKeyIfNeccessary()
 
   var wg sync.WaitGroup
   wg.Add(3)

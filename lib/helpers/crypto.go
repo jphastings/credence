@@ -2,6 +2,7 @@ package helpers
 
 import (
   "os"
+  "log"
   "io/ioutil"
   "encoding/hex"
   "github.com/spacemonkeygo/openssl"
@@ -43,6 +44,12 @@ func CreatePrivateKey() openssl.PrivateKey {
 
   ioutil.WriteFile(PemPath(), pemBlock, 0600)
 
+  SavePublicKeyToDB(privateKey)
+
+  return privateKey
+}
+
+func SavePublicKeyToDB(privateKey openssl.PrivateKey) {
   publicPemBlock, err := privateKey.MarshalPKIXPublicKeyPEM()
   if err != nil {
     panic(err)
@@ -58,8 +65,19 @@ func CreatePrivateKey() openssl.PrivateKey {
   me.Fingerprint = hex.EncodeToString(fingerprint[:])
   db := models.DB()
   db.Save(&me)
+  log.Print("Stored self public key in user DB")
+}
 
-  return privateKey
+func SavePublicKeyIfNeccessary() {
+  privateKey, err := LoadPrivateKey()
+  if err != nil {
+    return
+  }
+
+  me := models.Me()
+  if me.Fingerprint == "" {
+    SavePublicKeyToDB(privateKey)
+  }
 }
 
 func HasPrivateKey() bool {

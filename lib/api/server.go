@@ -2,6 +2,7 @@ package api
 
 import (
   "fmt"
+  "log"
   "sync"
   "net/http"
   "github.com/jphastings/credence/lib/config"
@@ -19,7 +20,7 @@ func StartAPI(wg sync.WaitGroup) {
 
   static := http.FileServer(http.Dir("htdocs"))
   http.Handle("/", static)
-  fmt.Println("Webservice started on", listenUri)
+  log.Println("Webservice started on", listenUri)
   panic(http.ListenAndServe(listenUri, nil))
 }
 

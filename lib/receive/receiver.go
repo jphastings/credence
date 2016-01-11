@@ -27,6 +27,7 @@ func Setup() {
   if err != nil {
     panic(err)
   }
+  log.Println("Receiver started")
 
   db := models.DB()
   rows, _ := db.Model(models.Peer{}).Rows()
