@@ -40,9 +40,9 @@ func SearchCredKeysBreakdown(key string) []*credence.SearchResult_KeyBreakdown {
   var dbSpecificSelect string
   switch cfg.DB.Type {
   case "postgres":
-    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment::int * a.weight), sum(r.is_true::int * a.weight), sum(r.is_false::int * a.weight), sum(r.is_ambiguous::int * a.weight), sum(ifnull(a.weight, 1))"
+    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment::int * a.weight), sum(r.is_true::int * a.weight), sum(r.is_false::int * a.weight), sum(r.is_ambiguous::int * a.weight), sum(coalesce(a.weight, 1))"
   case "sqlite3":
-    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment * a.weight), sum(r.is_true * a.weight), sum(r.is_false * a.weight), sum(r.is_ambiguous * a.weight), sum(ifnull(a.weight, 1))"
+    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment * a.weight), sum(r.is_true * a.weight), sum(r.is_false * a.weight), sum(r.is_ambiguous * a.weight), sum(coalesce(a.weight, 1))"
   }
 
   rows, err := db.

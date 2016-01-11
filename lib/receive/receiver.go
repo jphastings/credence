@@ -72,8 +72,6 @@ func ConnectToBroadcaster(uri string) error {
 func RouteMessage(message *credence.Message) {
   config := config.Read()
 
-  log.Println("Routing message", message)
-
   cred := message.GetCred()
   if cred != nil {
     if helpers.StoreCredUnknownAuthor(cred) {

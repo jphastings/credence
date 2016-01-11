@@ -28,9 +28,11 @@ func Setup() {
     &CredRecord{},
     &CredKey{},
     &Peer{},
+    &SentMessage{},
   )
 
   db.Model(&CredRecord{}).AddUniqueIndex("idx_cred_bytes", "cred_bytes")
+  db.Model(&SentMessage{}).AddUniqueIndex("idx_message_hash", "message_hash")
 }
 
 func DB() gorm.DB {
