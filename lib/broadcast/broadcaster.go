@@ -36,7 +36,7 @@ func StartBroadcaster(wg sync.WaitGroup) {
   for {
     _, err := receiver.Read(msgBytes)
     if err != nil {
-      panic(err)
+      log.Print(err)
       continue
     }
 
