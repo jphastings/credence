@@ -40,9 +40,9 @@ func SearchCredKeysBreakdown(key string) []*credence.SearchResult_KeyBreakdown {
   var dbSpecificSelect string
   switch cfg.DB.Type {
   case "postgres":
-    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment::int * coalesce(a.weight, 1)), sum(r.is_true::int * coalesce(a.weight, 1)), sum(r.is_false::int * coalesce(a.weight, 1)), sum(r.is_ambiguous::int * coalesce(a.weight, 1)), sum(coalesce(a.weight, 1))"
+    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment::int * coalesce(a.weight, 1)), sum(r.is_true::int * coalesce(a.weight, 1)), sum(r.is_false::int * coalesce(a.weight, 1)), sum(r.is_ambiguous::int * coalesce(a.weight, 1)), sum(coalesce(a.weight, 0))"
   case "sqlite3":
-    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment * coalesce(a.weight, 1)), sum(r.is_true * coalesce(a.weight, 1)), sum(r.is_false * coalesce(a.weight, 1)), sum(r.is_ambiguous * coalesce(a.weight, 1)), sum(coalesce(a.weight, 1))"
+    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment * coalesce(a.weight, 1)), sum(r.is_true * coalesce(a.weight, 1)), sum(r.is_false * coalesce(a.weight, 1)), sum(r.is_ambiguous * coalesce(a.weight, 1)), sum(coalesce(a.weight, 0))"
   }
 
   rows, err := db.
