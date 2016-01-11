@@ -40,17 +40,17 @@ func SearchCredKeysBreakdown(key string) []*credence.SearchResult_KeyBreakdown {
   var dbSpecificSelect string
   switch cfg.DB.Type {
   case "postgres":
-    dbSpecificSelect = "key, statement_hash, sum(no_comment::int), sum(is_true::int), sum(is_false::int), sum(is_ambiguous::int), count(author_id)"
+    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment::int * a.weight), sum(r.is_true::int * a.weight), sum(r.is_false::int * a.weight), sum(r.is_ambiguous::int * a.weight), sum(ifnull(a.weight, 1))"
   case "sqlite3":
-    dbSpecificSelect = "key, statement_hash, sum(no_comment), sum(is_true), sum(is_false), sum(is_ambiguous), count(author_id)"
+    dbSpecificSelect = "k.key, r.statement_hash, sum(r.no_comment * a.weight), sum(r.is_true * a.weight), sum(r.is_false * a.weight), sum(r.is_ambiguous * a.weight), sum(ifnull(a.weight, 1))"
   }
 
   rows, err := db.
-    Model(CredRecord{}).
+    Table("cred_records r").
     Select(dbSpecificSelect).
-    Joins("left join cred_keys on cred_keys.cred_record_id = cred_records.id").
-    Where("key LIKE ?", key).
-    Group("key, statement_hash").
+    Joins("left join cred_keys k on k.cred_record_id = r.id left join users a on r.author_id = a.id").
+    Where("k.key LIKE ?", key).
+    Group("k.key, r.statement_hash").
     Rows()
 
   if err != nil {
