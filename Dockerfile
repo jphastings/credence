@@ -1,8 +1,4 @@
-FROM golang
-ADD build-deps-linux.sh /go/src/github.com/jphastings/credence/
-WORKDIR /go/src/github.com/jphastings/credence
-RUN apt-get update && ./build-deps-linux.sh
-
+FROM jphastings/credence:dependencies
 ADD . /go/src/github.com/jphastings/credence
 RUN make bootstrap
 
