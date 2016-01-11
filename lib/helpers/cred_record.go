@@ -10,7 +10,6 @@ import (
 func StoreCredUnknownAuthor(cred *credence.Cred) bool {
   author := DetectAuthor(cred)
   return StoreCredWithAuthor(cred, author)
-  // sql.NullInt64{Valid: false} may be useful?
 }
 
 func StoreCredWithAuthor(cred *credence.Cred, author models.User) bool {
@@ -42,5 +41,4 @@ func StoreCredWithAuthor(cred *credence.Cred, author models.User) bool {
   } else {
     return false
   }
-
 }

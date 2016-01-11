@@ -27,6 +27,15 @@ func Setup() {
   if err != nil {
     panic(err)
   }
+
+  db := models.DB()
+  rows, _ := db.Model(models.Peer{}).Rows()
+
+  for rows.Next() {
+    var peerUri string
+    rows.Scan(&peerUri)
+    ConnectToBroadcaster(peerUri)
+  }
 }
 
 func StartReceiver(wg sync.WaitGroup) {
@@ -52,13 +61,11 @@ func StartReceiver(wg sync.WaitGroup) {
   }
 }
 
-func ConnectToBroadcaster(uri string) {
+func ConnectToBroadcaster(uri string) error {
   broadcasterUri := fmt.Sprintf("tcp://%s", uri)
   log.Println("Connecting to", broadcasterUri)
   err := receiver.Connect(broadcasterUri)
-  if err != nil {
-    log.Print(err)
-  }
+  return err
 }
 
 func RouteMessage(message *credence.Message) {

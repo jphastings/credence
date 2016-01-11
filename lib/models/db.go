@@ -27,6 +27,7 @@ func Setup() {
     &User{},
     &CredRecord{},
     &CredKey{},
+    &Peer{},
   )
 
   db.Model(&CredRecord{}).AddUniqueIndex("idx_cred_bytes", "cred_bytes")
