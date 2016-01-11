@@ -1,3 +1,3 @@
 #!/bin/bash
-cat template.config envsubst > settings/config
-/go/bin/credence --config ./
+cat serverconfig/template.config | envsubst > serverconfig/settings.config
+/go/bin/credence --config serverconfig/

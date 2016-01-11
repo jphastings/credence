@@ -1,6 +1,7 @@
 package models
 
 import (
+  "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/definitions/credence"
 )
 
@@ -34,9 +35,19 @@ func SearchCredKeys(key string) []*credence.Cred {
 func SearchCredKeysBreakdown(key string) []*credence.SearchResult_KeyBreakdown {
   var results []*credence.SearchResult_KeyBreakdown
 
+  cfg := config.Read()
+
+  var dbSpecificSelect string
+  switch cfg.DB.Type {
+  case "postgres":
+    dbSpecificSelect = "key, statement_hash, sum(no_comment::int), sum(is_true::int), sum(is_false::int), sum(is_ambiguous::int), count(author_id)"
+  case "sqlite3":
+    dbSpecificSelect = "key, statement_hash, sum(no_comment), sum(is_true), sum(is_false), sum(is_ambiguous), count(author_id)"
+  }
+
   rows, err := db.
     Model(CredRecord{}).
-    Select("key, statement_hash, sum(no_comment), sum(is_true), sum(is_false), sum(is_ambiguous), count(author_id)").
+    Select(dbSpecificSelect).
     Joins("left join cred_keys on cred_keys.cred_record_id = cred_records.id").
     Where("key LIKE ?", key).
     Group("key, statement_hash").

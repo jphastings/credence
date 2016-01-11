@@ -1,10 +1,12 @@
 FROM golang
-ADD . /go/src/github.com/jphastings/credence
+ADD build-deps-linux.sh /go/src/github.com/jphastings/credence/
 WORKDIR /go/src/github.com/jphastings/credence
-RUN build-deps-linux.sh
-RUN make bootstrap
+RUN apt-get update && ./build-deps-linux.sh
 
-ENTRYPOINT serverconfig/start
+ADD . /go/src/github.com/jphastings/credence
+RUN make bootstrap
 
 EXPOSE 80
 EXPOSE 2733
+
+ENTRYPOINT serverconfig/start
