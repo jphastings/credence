@@ -8,6 +8,7 @@ import (
   "encoding/hex"
   "github.com/zeromq/goczmq"
   "github.com/spacemonkeygo/openssl"
+  "github.com/jackpal/go-nat-pmp"
   "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/models"
 )
@@ -25,6 +26,18 @@ func Setup() {
     panic(err)
   }
   log.Println("Broadcaster started on", broadcastUri)
+
+  client, err := natpmp.NewClientForDefaultGateway()
+  if err != nil {
+    panic(err)
+  }
+  result, err := client.GetExternalAddress()
+  result, err := client.AddPortMapping("tcp", config.Broadcaster.Port, config.Broadcaster.Port, natpmp.RECOMMENDED_MAPPING_LIFETIME_SECONDS)
+  if err == nil {
+    log.Println("Port mapped", result)
+  } else {
+    log.Print("Couldn't map port via PMP")
+  }
 
   receiver, err = goczmq.NewPull("inproc://broadcast")
   if err != nil {
