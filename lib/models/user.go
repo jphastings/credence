@@ -9,7 +9,7 @@ type User struct {
   PublicKey []byte
   // An identifying URI
   IdentityUri string
-  Weight int
+  Weight int `sql:"default 1"`
 }
 
 func Me() User {

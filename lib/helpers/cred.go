@@ -77,4 +77,3 @@ func DetectAuthor(cred *credence.Cred) models.User {
 
   return author
 }
-

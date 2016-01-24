@@ -2,9 +2,12 @@ package api
 
 import (
   "io"
+  "fmt"
   "log"
   "time"
   "net/http"
+  "encoding/base64"
+  "code.google.com/p/rsc/qr"
   "github.com/zeromq/goczmq"
   "github.com/golang/protobuf/proto"
   "github.com/golang/protobuf/jsonpb"
@@ -65,10 +68,23 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/vnd.google.protobuf")
     credBytes, _ := proto.Marshal(cred)
     credMarshaled = string(credBytes)
+  case "text/html":
+    credBytes, _ := proto.Marshal(cred)
+    // TODO: Remove padding
+    b64 := base64.URLEncoding.EncodeToString(credBytes)
+    url := fmt.Sprintf("http://cred.ence.in/cred/%s", b64)
+    w.Header().Set("Location", url)
+    w.WriteHeader(http.StatusSeeOther)
+    return
   case "application/json":
     w.Header().Set("Content-Type", "application/json")
     marshaler := jsonpb.Marshaler{}
     credMarshaled, _ = marshaler.MarshalToString(cred)
+  case "image/png":
+    w.Header().Set("Content-Type", "image/png")
+    credBytes, _ := proto.Marshal(cred)
+    code, _ := qr.Encode(string(credBytes), qr.M)
+    credMarshaled = string(code.PNG())
   default:
     w.WriteHeader(http.StatusNotAcceptable)
     return
