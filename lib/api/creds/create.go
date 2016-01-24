@@ -2,11 +2,9 @@ package api
 
 import (
   "io"
-  "fmt"
   "log"
   "time"
   "net/http"
-  "encoding/base64"
   "code.google.com/p/rsc/qr"
   "github.com/zeromq/goczmq"
   "github.com/golang/protobuf/proto"
@@ -69,10 +67,7 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
     credBytes, _ := proto.Marshal(cred)
     credMarshaled = string(credBytes)
   case "text/html":
-    credBytes, _ := proto.Marshal(cred)
-    // TODO: Remove padding
-    b64 := base64.URLEncoding.EncodeToString(credBytes)
-    url := fmt.Sprintf("http://cred.ence.in/cred/%s", b64)
+    url := helpers.CredUri(cred)
     w.Header().Set("Location", url)
     w.WriteHeader(http.StatusSeeOther)
     return

@@ -1,7 +1,10 @@
 package helpers
 
 import (
+  "fmt"
+  "strings"
   "encoding/hex"
+  "encoding/base64"
   "github.com/golang/protobuf/proto"
   "github.com/spacemonkeygo/openssl"
   "github.com/jphastings/credence/lib/models"
@@ -77,3 +80,28 @@ func DetectAuthor(cred *credence.Cred) models.User {
 
   return author
 }
+
+func CredUri(cred *credence.Cred) string {
+  credBytes, _ := proto.Marshal(cred)
+  b64 := base64.URLEncoding.EncodeToString(credBytes)
+  // TODO: Figure out why RawURLEncoding doesn't work…
+  b64NoPadding := strings.Replace(b64, "=", "", -1)
+  return fmt.Sprintf("credence:creds/info?cred=%s", b64NoPadding)
+}
+
+func CredFromBase64(b64 string) (*credence.Cred, error) {
+  cred := &credence.Cred{}
+
+  credBytes, err := base64.URLEncoding.DecodeString(b64)
+  if err != nil {
+    return cred, err
+  }
+  
+  err = proto.Unmarshal(credBytes, cred)
+  if err != nil {
+    return cred, err
+  }
+
+  return cred, nil
+}
+

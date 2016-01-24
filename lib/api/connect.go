@@ -23,6 +23,6 @@ func ConnectHandler(w http.ResponseWriter, r *http.Request) {
       }
 
       w.WriteHeader(http.StatusOK)
-    default: MethodNotAllowed(w, r)
+    default: w.WriteHeader(http.StatusMethodNotAllowed)
   }
 }

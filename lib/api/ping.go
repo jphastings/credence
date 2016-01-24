@@ -7,7 +7,7 @@ import (
 func PingHandler(w http.ResponseWriter, r *http.Request) {
   switch r.Method {
     case "GET": Ping(w, r)
-    default: MethodNotAllowed(w, r)
+    default: w.WriteHeader(http.StatusMethodNotAllowed)
   }
 }
 

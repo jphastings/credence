@@ -8,5 +8,9 @@
 </head>
 <body>
     <h1>Credence</h1>
+    
+  <script>
+    navigator.registerProtocolHandler('web+credence', window.location.origin + '/protocol-handler?uri=%s', 'Credence');
+  </script>
 </body>
 </html>

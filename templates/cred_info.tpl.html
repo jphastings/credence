@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Credence</title>
+    <link rel="stylesheet" href="css/screen.css">
+</head>
+<body>
+  <p>This Cred asserts that, in the context(s) below, the following statement is {{.Assertion}}, citing <a href="{{.ProofUri}}" target="_blank">this source</a> as proof.</p>
+  <blockquote>{{.Statement}}</blockquote>
+  <ul>
+    {{range .Keys}}
+    <li>
+      {{if .Url}}
+        <a href="{{.Url}}" target="_blank">{{.String}}</a>
+      {{else}}
+        {{.String}}
+      {{end}}
+    </li>
+    {{end}}
+  </ul>
+</body>
+</html>

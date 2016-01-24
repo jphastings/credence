@@ -13,8 +13,8 @@ func CredHandler(w http.ResponseWriter, r *http.Request) {
       if helpers.HasPrivateKey() {
         api.CreateCredHandler(w, r)
       } else {
-        MethodNotAllowed(w, r)
+        w.WriteHeader(http.StatusMethodNotAllowed)
       }
-    default: MethodNotAllowed(w, r)
+    default: w.WriteHeader(http.StatusMethodNotAllowed)
   }
 }
