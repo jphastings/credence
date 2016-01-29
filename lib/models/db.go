@@ -1,6 +1,8 @@
 package models
 
 import (
+  "log"
+  "time"
   "github.com/jinzhu/gorm"
   _ "github.com/mattn/go-sqlite3"
   _ "github.com/lib/pq"
@@ -17,10 +19,15 @@ func Setup() {
   if cfg.DB.Type == "sqlite3" {
     connectionString = config.ConfigFile(connectionString)
   }
-  db, err = gorm.Open(cfg.DB.Type, connectionString)
+  for {
+    db, err = gorm.Open(cfg.DB.Type, connectionString)
 
-  if err != nil {
-    panic(err)
+    if err == nil {
+      break
+    } else {
+      log.Println("Cannot connect to DB. Will try again in 2 seconds:", err)
+      time.Sleep(time.Duration(2) * time.Second)
+    }
   }
 
   db.AutoMigrate(
