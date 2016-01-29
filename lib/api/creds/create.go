@@ -5,7 +5,6 @@ import (
   "log"
   "time"
   "net/http"
-  "code.google.com/p/rsc/qr"
   "github.com/zeromq/goczmq"
   "github.com/golang/protobuf/proto"
   "github.com/golang/protobuf/jsonpb"
@@ -75,11 +74,6 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     marshaler := jsonpb.Marshaler{}
     credMarshaled, _ = marshaler.MarshalToString(cred)
-  case "image/png":
-    w.Header().Set("Content-Type", "image/png")
-    credBytes, _ := proto.Marshal(cred)
-    code, _ := qr.Encode(string(credBytes), qr.M)
-    credMarshaled = string(code.PNG())
   default:
     w.WriteHeader(http.StatusNotAcceptable)
     return
