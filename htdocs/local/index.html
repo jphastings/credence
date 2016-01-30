@@ -20,17 +20,22 @@
   </style>
 </head>
 <body>
-  <iframe id="local" onLoad="loaded()"></iframe>
+  <iframe id="local"></iframe>
   <div id="loading">
     <h1>Looking for Credence on your machine…</h1>
   </div>
   <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch"></script>
+  <script src="/js/helpers.js"></script>
   <script>
-    var server = 'http://127.0.0.1:8808';
     var local = document.getElementById('local');
     var loading = document.getElementById('loading');
     
-    function couldNotContact() {
+    function found(server) {
+      local.addEventListener('load', loaded);
+      local.src = server;
+    }
+
+    function notFound() {
       window.location.href = 'http://getcredence.net'
     }
 
@@ -39,18 +44,7 @@
       loading.style.display = 'none';
     }
 
-    fetch(server + '/ping').then(
-      function(response) {  
-        switch(response.status) {
-          case 200:
-            local.addEventListener('load', loaded);
-            local.src = server;
-            break;
-          default:
-            couldNotContact();
-        }
-      }  
-    ).catch(couldNotContact);
+    Credence.detectLocalInstance(found, notFound);
   </script>
 </body>
 </html>
