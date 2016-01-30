@@ -1,21 +1,13 @@
 package api
 
 import (
-  "fmt"
   "io/ioutil"
   "net/url"
   "net/http"
   "html/template"
   "github.com/jphastings/credence/lib/helpers"
-  "github.com/jphastings/credence/lib/definitions/credence"
 )
 
-var AssertionStrings = map[credence.Cred_AssertionType]string{
-  0: "not commentable upon",
-  1: "true",
-  2: "false",
-  3: "ambiguous",
-}
 var tpl *template.Template
 
 type KeyDetails struct {
@@ -46,7 +38,7 @@ func InfoCredHandler(w http.ResponseWriter, r *http.Request) {
     ProofUri string
     Keys []KeyDetails
   }{
-    Assertion: AssertionStrings[cred.Assertion],
+    Assertion: cred.Assertion.String(),
     Statement: cred.GetHumanReadable().Statement,
     ProofUri: cred.ProofUri,
   }
@@ -56,7 +48,7 @@ func InfoCredHandler(w http.ResponseWriter, r *http.Request) {
 
     u, err := url.Parse(key)
     if err == nil {
-      keyDetails.String = fmt.Sprintf("%s/…", u.Host)
+      keyDetails.String = u.Host
       keyDetails.Url = key
     }
 

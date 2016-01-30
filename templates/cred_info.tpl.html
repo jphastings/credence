@@ -4,21 +4,93 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Credence</title>
-    <link rel="stylesheet" href="css/screen.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/screen.css">
 </head>
 <body>
-  <p>This Cred asserts that, in the context(s) below, the following statement is {{.Assertion}}, citing <a href="{{.ProofUri}}" target="_blank">this source</a> as proof.</p>
-  <blockquote>{{.Statement}}</blockquote>
-  <ul>
-    {{range .Keys}}
-    <li>
-      {{if .Url}}
-        <a href="{{.Url}}" target="_blank">{{.String}}</a>
-      {{else}}
-        {{.String}}
-      {{end}}
-    </li>
-    {{end}}
-  </ul>
+  <div class="container">
+    <div class="header clearfix">
+      <nav>
+        <ul class="nav nav-pills pull-xs-right">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://medium.com/musings-by-jp/the-web-s-missing-communication-faculty-e2f910b908fa">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/jphastings/credence">Github</a>
+          </li>
+        </ul>
+      </nav>
+      <h3 class="text-muted">Credence</h3>
+    </div>
+
+    <section id="cred">
+      <p>An <span data-toggle="tooltip" title="This Credence system does not have the ID that would allow it to recognise the author of this Cred.">anonymous internet user</span> has issued a Cred:</p>
+      <blockquote class="blockquote">
+        <p>{{.Statement}}</p>
+        <footer class="blockquote-footer">
+          <ul class="list-inline">
+            {{range .Keys}}
+              <li class="list-inline-item"><cite>
+                {{if .Url}}
+                  <a href="{{.Url}}" target="_blank">{{.String}}</a>
+                {{else}}
+                  {{.String}}
+                {{end}}
+              </cite></li>
+            {{end}}
+          </ul>
+        </footer>
+      </blockquote>
+
+      <div>
+        {{if eq .Assertion "NO_COMMENT"}}
+          <div class="alert alert-info">
+            <p>They went out of their way to say "<strong>no comment</strong>" on whether this statement is true or false;
+        {{end}}
+        {{if eq .Assertion "IS_TRUE"}}
+          <div class="alert alert-success">
+            <p>They think this is <strong>true</strong>;
+        {{end}}
+        {{if eq .Assertion "IS_FALSE"}}
+          <div class="alert alert-danger">
+            <p>They think this is <strong>false</strong>;
+        {{end}}
+        {{if eq .Assertion "IS_AMBIGUOUS"}}
+          <div class="alert alert-warning">
+            <p>They think this is <strong>ambiguous</strong>, contradictory to itself or that it makes no sense;
+        {{end}}
+
+          {{if .ProofUri}}
+            citing <a href="{{.ProofUri}}" target="_blank">this article</a> as proof.
+          {{else}}
+            without citing any proof.
+          {{end}}
+          </p>
+        </div> <!-- alert -->
+      </div>
+    </section>
+    
+
+
+    <hr class="tall" />
+
+    <section id="about">
+      <h5>What does this mean?</h5>
+      <p>Credence is a tool that helps you understand the believability of things online by collecting what people you trust have to say.</p>
+      <p>The <abbr title="One person's opinion of whether a phrase is true or false in the Credence system." data-toggle="tooltip">Cred</abbr> above was made (anonymously) by someone on the internet who wanted to make their trust public.</p>
+      <p>Running Credence on your machine allows you to choose friends and public figures, and automatically mark their Creds as trustworthy (or ignorable).</p>
+      <a class="btn btn-success-outline" href="https://medium.com/musings-by-jp/the-web-s-missing-communication-faculty-e2f910b908fa" role="button">Find out more</a>
+    <section>
+  </div>
+
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/tether.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script>
+    $('[data-toggle="tooltip"]').tooltip()
+  </script>
 </body>
 </html>

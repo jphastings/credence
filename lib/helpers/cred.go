@@ -86,7 +86,9 @@ func CredUri(cred *credence.Cred) string {
   b64 := base64.URLEncoding.EncodeToString(credBytes)
   // TODO: Figure out why RawURLEncoding doesn't work…
   b64NoPadding := strings.Replace(b64, "=", "", -1)
-  return fmt.Sprintf("credence:creds/info?cred=%s", b64NoPadding)
+  // Use the 'official' Credence server for now, but switch to
+  // a web+credence: protocol in the future, for decentralised goodness.
+  return fmt.Sprintf("http://getcredence.net/creds/info?cred=%s", b64NoPadding)
 }
 
 func CredFromBase64(b64 string) (*credence.Cred, error) {

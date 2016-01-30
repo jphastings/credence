@@ -4,11 +4,41 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Credence</title>
-    <link rel="stylesheet" href="css/screen.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/screen.css">
 </head>
 <body>
-    <h1>Credence</h1>
-    
+  <div class="container">
+    <div class="header clearfix">
+      <nav>
+        <ul class="nav nav-pills pull-xs-right">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://medium.com/musings-by-jp/the-web-s-missing-communication-faculty-e2f910b908fa">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/jphastings/credence">Github</a>
+          </li>
+        </ul>
+      </nav>
+      <h3 class="text-muted">Credence</h3>
+    </div>
+
+    <div class="jumbotron">
+      <h1 class="display-2">Credence</h1>
+      <p class="lead">Information on what to trust online, based on the things people you trust have to say.</p>
+      <p>It's early days for Credence, please take a look at the article on Medium that explains why it is being built, or the code on Github.</p>
+      <p><a class="btn btn-lg btn-success" href="https://medium.com/musings-by-jp/the-web-s-missing-communication-faculty-e2f910b908fa" target="_blank" role="button">What is Credence?</a></p>
+      <p><a class="btn btn-secondary" href="/creds/info?cred=CjtodHRwczovL3R3aXR0ZXIuY29tL1JlYWxGYWtlRmFjdHMvc3RhdHVzLzQwOTA2MjgzMTM1NTQ4NjIwOBCjwLK1BRgCIlJodHRwOi8vd3d3Lmd1aW5uZXNzd29ybGRyZWNvcmRzLmNvbS93b3JsZC1yZWNvcmRzL2xvbmdlc3QtbWV4aWNhbi13YXZlLSUyOHRpbWVkJTI5KoACh9TIa7eS8oHrDj0vusc_QO2FKC1tSUK5zLeNTObqZ22zhHyaXp6gn2MrOiBlKD3PQ8QRs9j44jS_mMLhLHPMUT-g8O1rmgrr-_6tI3IWx9ag8GiyuoJ53BLKzzdOdosuXVVY8uqIIMt0F6218Ej57v0wz5ugcpPmHE_0QMAEioScr66ttpMcD7EOAksA4v7apR10QBtSfCkD-GUSWrZHBtbH9Pf3DRJJSRfaQQkfDp_cksC5oVTZ8FXeGbQuiYjuDUOAm2d313Ky7dqrHoWImP4FYcPQ9sOIcOdOtVF6BuATjwnABhtHztAEaBD0ntXnf94044b5oLlWOR6isawVazKOAQqLAVRoZSBsb25nZXN0IGNvbnNlY3V0aXZlIGNyb3dkIHdhdmUgb2NjdXJyZWQgaW4gMjAwMiBhdCBhIERlbnZlciBicm9uY29zIGdhbWUuIFRoZSB3YXZlIGNpcmNsZWQgdGhlIHN0YWRpdW0gNDkyIHRpbWVzIGFuZCBsYXN0ZWQgb3ZlciAzIGhycy4=" role="button">An example</a>
+      <a class="btn btn-secondary" href="https://github.com/jphastings/credence" target="_blank" role="button">
+        <img class="icon" src="/img/GitHub-Mark-120px-plus.png" />
+        How it works
+      </a></p>
+    </div>
+  </div>
+ 
   <script>
     navigator.registerProtocolHandler('web+credence', window.location.origin + '/protocol-handler?uri=%s', 'Credence');
   </script>
