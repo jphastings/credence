@@ -58,27 +58,46 @@ func SignableCredBytes(cred *credence.Cred) []byte {
   return sigCredBytes
 }
 
-func DetectAuthor(cred *credence.Cred) models.User {
-  db := models.DB()
-  users := []models.User{}
-  db.Where("public_key IS NOT NULL").Find(&users)
-
+// Returns the author of the cred, if it can be determined.
+// Will return an error if the public key for the author_fingerprint
+// doesn't match the signature.
+func DetectAuthor(cred *credence.Cred) (models.User, error) {
   author := models.User{}
+  db := models.DB()
 
-  sigCredByte := SignableCredBytes(cred)
+  if (cred.AuthorFingerprint == nil) {
+    users := []models.User{}
+    db.Where("public_key IS NOT NULL").Find(&users)
 
-  for _, user := range users {
-    publicKey, err := openssl.LoadPublicKeyFromPEM(user.PublicKey)
-    if err == nil {
-      verifyErr := publicKey.VerifyPKCS1v15(openssl.SHA256_Method, sigCredByte, cred.Signature)
-      if verifyErr == nil {
-        author = user
-        break
+    sigCredByte := SignableCredBytes(cred)
+
+    for _, user := range users {
+      publicKey, err := openssl.LoadPublicKeyFromPEM(user.PublicKey)
+      if err == nil {
+        verifyErr := publicKey.VerifyPKCS1v15(openssl.SHA256_Method, sigCredByte, cred.Signature)
+        if verifyErr == nil {
+          author = user
+          break
+        }
       }
+    }
+  } else {
+    db.Where("fingerprint = ?", hex.EncodeToString(cred.AuthorFingerprint)).First(&author)
+
+    if !db.NewRecord(author) {
+      sigCredByte := SignableCredBytes(cred)
+      publicKey, err := openssl.LoadPublicKeyFromPEM(author.PublicKey)
+      if err == nil {
+        verifyErr := publicKey.VerifyPKCS1v15(openssl.SHA256_Method, sigCredByte, cred.Signature)
+        if verifyErr != nil {
+          return models.User{}, verifyErr
+        }
+      }
+      // TODO: What if we can't load the public key?
     }
   }
 
-  return author
+  return author, nil
 }
 
 func CredUri(cred *credence.Cred) string {
@@ -106,4 +125,3 @@ func CredFromBase64(b64 string) (*credence.Cred, error) {
 
   return cred, nil
 }
-

@@ -12,9 +12,7 @@ Which woud be represented like this (in a compressed form) and transmitted to ot
 
 ```json
 {
-  "keys": [
-    "https://twitter.com/RealFakeFacts/status/409062831355486208"
-  ],
+  "source_uri": "https://twitter.com/RealFakeFacts/status/409062831355486208",
   "timestamp": "1452109802",
   "assertion": "IS_FALSE",
   "proof_uri": "http://www.guinnessworldrecords.com/world-records/longest-mexican-wave-%28timed%29",
@@ -41,6 +39,8 @@ The provenance of information used to be very clear -- "this article was written
 
 Credence aims to be a mechanism for bringing our own networks of belief-in-accuracy to the internet. In an isolated community an individual quickly learns whose declarations can be trusted and who is less reliable using their own experiences and the reputation already earned with others in the community. Credence facilitates this functionality for massively distributed communication, and tries to do only that with the aim of becoming a platform for more specific tools.
 
+I've also written [an article on Medium](https://medium.com/musings-by-jp/the-web-s-missing-communication-faculty-e2f910b908fa) which explains the rationale behind Credence.
+
 ## Usage
 
 Credence is a background service written in go. Once you have go installed you should clone this repo and use the Makefile to compile it.
@@ -48,11 +48,11 @@ Credence is a background service written in go. Once you have go installed you s
 ```bash
 brew install libsodium czmq
 brew install --devel protobuf
+go get github.com/golang/protobuf/protoc-gen-go
 
-cd $GOPATH/src
-git clone https://github.com/jphastings/credence.git github.com/jphastings/credence
-cd github.com/jphastings/credence
+go get github.com/jphastings/credence
+cd $GOPATH/github.com/jphastings/credence
 make bootstrap
 ```
 
-A `credence` binary will now exist and running it will give you all the instructions you need.
+A `credence` binary will be created, running it will give you all the instructions you need.

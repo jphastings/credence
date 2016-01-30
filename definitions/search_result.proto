@@ -25,10 +25,10 @@ message SearchResult {
     }
   }
 
-  message KeyBreakdown {
-    string key = 1;
+  message SourceBreakdown {
+    string source_uri = 1;
     repeated AssertionBreakdown assertions = 2;
   }
 
-  repeated KeyBreakdown results = 1;
+  repeated SourceBreakdown results = 1;
 }

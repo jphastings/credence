@@ -88,7 +88,7 @@ func RouteMessage(message *credence.Message) {
       BroadcastMessage(message)
 
       for _, key := range searchRequest.Keys {
-        for _, cred := range models.SearchCredKeys(key) {
+        for _, cred := range models.SearchCreds(key) {
           credMsg := &credence.Message{
             Type: &credence.Message_Cred{
               Cred: cred,

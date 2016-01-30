@@ -8,7 +8,8 @@ import (
 )
 
 func StoreCredUnknownAuthor(cred *credence.Cred) bool {
-  author := DetectAuthor(cred)
+  author, _ := DetectAuthor(cred)
+  // TODO: propagate error 
   return StoreCredWithAuthor(cred, author)
 }
 
@@ -20,15 +21,9 @@ func StoreCredWithAuthor(cred *credence.Cred, author models.User) bool {
   db.FirstOrInit(&credRecord, models.CredRecord{CredBytes: credBytes})
 
   if db.NewRecord(credRecord) {
-    var keys []models.CredKey
-    for _, key := range cred.Keys {
-      keyObj := models.CredKey { Key: key }
-      keys = append(keys, keyObj)
-    }
-
     credRecord.Author = author
     credRecord.StatementHash = StatementHash(cred)
-    credRecord.Keys = keys
+    credRecord.SourceUri = cred.SourceUri
     credRecord.ReceivedAt = time.Now()
     
     credRecord.NoComment = cred.Assertion == credence.Cred_NO_COMMENT

@@ -5,14 +5,23 @@ import (
   "net/url"
   "net/http"
   "html/template"
+  "github.com/jphastings/credence/lib/models"
   "github.com/jphastings/credence/lib/helpers"
 )
 
 var tpl *template.Template
 
-type KeyDetails struct {
+type SourceDetails struct {
   String string
   Url string
+}
+
+type TemplateProps struct {
+  Assertion string
+  Statement string
+  ProofUri string
+  SourceUri SourceDetails
+  Author models.User
 }
 
 func init() {
@@ -32,27 +41,22 @@ func InfoCredHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  props := struct {
-    Assertion string
-    Statement string
-    ProofUri string
-    Keys []KeyDetails
-  }{
+  author, err := helpers.DetectAuthor(cred)
+  if err != nil {
+    panic(err)
+  }
+
+  sourceUri, err := url.Parse(cred.SourceUri)
+
+  props := TemplateProps{
     Assertion: cred.Assertion.String(),
     Statement: cred.GetHumanReadable().Statement,
     ProofUri: cred.ProofUri,
-  }
-
-  for _, key := range cred.Keys {
-    keyDetails := KeyDetails{String: key}
-
-    u, err := url.Parse(key)
-    if err == nil {
-      keyDetails.String = u.Host
-      keyDetails.Url = key
-    }
-
-    props.Keys = append(props.Keys, keyDetails)
+    SourceUri: SourceDetails{
+      String: sourceUri.Host,
+      Url: cred.SourceUri,
+    },
+    Author: author,
   }
 
   w.WriteHeader(http.StatusOK)

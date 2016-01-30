@@ -13,7 +13,7 @@
       <nav>
         <ul class="nav nav-pills pull-xs-right">
           <li class="nav-item active">
-            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="https://medium.com/musings-by-jp/the-web-s-missing-communication-faculty-e2f910b908fa">About</a>
@@ -27,21 +27,17 @@
     </div>
 
     <section id="cred">
-      <p>An <span data-toggle="tooltip" title="This Credence system does not have the ID that would allow it to recognise the author of this Cred.">anonymous internet user</span> has issued a Cred:</p>
+      <p>
+        {{if .Author.IdentityUri}}
+          <a href="{{.Author.IdentityUri}}" target="_blank">{{if .Author.Name}}{{.Author.Name}}{{else}}An unnamed internet user{{end}}</a>
+        {{else}}
+          An <span data-toggle="tooltip" title="This Credence system does not have the ID that would allow it to recognise the author of this Cred.">anonymous internet user</span>
+        {{end}}
+        has issued a Cred:</p>
       <blockquote class="blockquote">
         <p>{{.Statement}}</p>
         <footer class="blockquote-footer">
-          <ul class="list-inline">
-            {{range .Keys}}
-              <li class="list-inline-item"><cite>
-                {{if .Url}}
-                  <a href="{{.Url}}" target="_blank">{{.String}}</a>
-                {{else}}
-                  {{.String}}
-                {{end}}
-              </cite></li>
-            {{end}}
-          </ul>
+          <cite><a href="{{.SourceUri.Url}}" target="_blank">{{.SourceUri.String}}</a></cite>
         </footer>
       </blockquote>
 
@@ -80,7 +76,7 @@
     <section id="about">
       <h5>What does this mean?</h5>
       <p>Credence is a tool that helps you understand the believability of things online by collecting what people you trust have to say.</p>
-      <p>The <abbr title="One person's opinion of whether a phrase is true or false in the Credence system." data-toggle="tooltip">Cred</abbr> above was made (anonymously) by someone on the internet who wanted to make their trust public.</p>
+      <p>The <abbr title="One person's opinion of whether a phrase is true or false in the Credence system." data-toggle="tooltip">Cred</abbr> above was made by someone on the internet who wanted to make their trust public.</p>
       <p>Running Credence on your machine allows you to choose friends and public figures, and automatically mark their Creds as trustworthy (or ignorable).</p>
       <a class="btn btn-success-outline" href="https://medium.com/musings-by-jp/the-web-s-missing-communication-faculty-e2f910b908fa" role="button">Find out more</a>
     <section>

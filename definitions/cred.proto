@@ -32,8 +32,8 @@ message Cred {
     IS_AMBIGUOUS = 3;
   }
 
-  // A list of keys that should be indexed for search so this cred can be found
-  repeated string keys = 1;
+  // The source URI for the statement
+  string source_uri = 1;
   // UNIX epoch of the time this cred was created
   int64 timestamp = 2;
   // Whether we are asserting the statement is true, false, ambiguous or we're making a null assertion.
@@ -42,14 +42,16 @@ message Cred {
   string proof_uri = 4;
   // The DSA Signature of this protobuf encoded cred (while signature is set to empty string)
   bytes signature = 5;
+  // The fingerprint of the key used to sign this cred, if the author wishes to make it public
+  bytes author_fingerprint = 6;
 
   // No statement is the equivalent of an "I exist"
   // which could be false (if your private key is compomised)
   // or no comment which is the equivalent of a cred no-op.
   oneof statement {
-    HumanReadableStatement human_readable = 6;
-    CredSeenStatement cred_seen = 7;
-    ApplicationSpecificStatement application_specific = 8;
-    IdentityDeclarationStatement identity_declaration = 9;
+    HumanReadableStatement human_readable = 7;
+    CredSeenStatement cred_seen = 8;
+    ApplicationSpecificStatement application_specific = 9;
+    IdentityDeclarationStatement identity_declaration = 10;
   }
 }

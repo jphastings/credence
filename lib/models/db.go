@@ -33,7 +33,6 @@ func Setup() {
   db.AutoMigrate(
     &User{},
     &CredRecord{},
-    &CredKey{},
     &Peer{},
     &SentMessage{},
   )

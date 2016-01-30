@@ -7,18 +7,18 @@ import (
 func DeduplicateKeys(searchResult *credence.SearchResult) {
   dedupedKeyMap := make(map[string]int)
 
-  for i, keyBreakdown := range searchResult.Results {
-    otherIndex, exists := dedupedKeyMap[keyBreakdown.Key]
+  for i, sourceBreakdown := range searchResult.Results {
+    otherIndex, exists := dedupedKeyMap[sourceBreakdown.SourceUri]
     if exists {
-      for _, assertion := range keyBreakdown.Assertions {
+      for _, assertion := range sourceBreakdown.Assertions {
         searchResult.Results[otherIndex].Assertions = append(searchResult.Results[otherIndex].Assertions, assertion)
       }
     } else {
-      dedupedKeyMap[keyBreakdown.Key] = i
+      dedupedKeyMap[sourceBreakdown.SourceUri] = i
     }
   }
 
-  newResults := []*credence.SearchResult_KeyBreakdown{}
+  newResults := []*credence.SearchResult_SourceBreakdown{}
 
   for _, index := range dedupedKeyMap {
     newResults = append(newResults, searchResult.Results[index])

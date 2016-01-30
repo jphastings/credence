@@ -5,6 +5,7 @@ import (
   "log"
   "time"
   "net/http"
+  "encoding/hex"
   "github.com/zeromq/goczmq"
   "github.com/golang/protobuf/proto"
   "github.com/golang/protobuf/jsonpb"
@@ -21,6 +22,14 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
+  signingUser := models.Me()
+
+  fingerprint := r.URL.Query()["fingerprint"] != nil
+
+  if fingerprint {
+    cred.AuthorFingerprint, _ = hex.DecodeString(signingUser.Fingerprint)
+  }
+
   // Set attributes
   cred.Timestamp = time.Now().Unix()
   err := helpers.SetSignature(cred)
@@ -29,7 +38,7 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   // Store in the DB
-  helpers.StoreCredWithAuthor(cred, models.Me())
+  helpers.StoreCredWithAuthor(cred, signingUser)
 
   // Set up the broadcaster
   broadcaster, err := goczmq.NewPush("inproc://broadcast")
