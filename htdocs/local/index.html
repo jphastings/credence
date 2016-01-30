@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Credence</title>
+  <style>
+  body {
+    margin: 0;
+  }
+  #local {
+    display: none;
+    border: none;
+    height: 100vh;
+    width: 100vw;
+  }
+  #download {
+    display:none;
+  }
+  </style>
+</head>
+<body>
+  <iframe id="local" onLoad="loaded()"></iframe>
+  <div id="loading">
+    <h1>Looking for Credence on your machine…</h1>
+  </div>
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch"></script>
+  <script>
+    var server = 'http://127.0.0.1:8808';
+    var local = document.getElementById('local');
+    var loading = document.getElementById('loading');
+    
+    function couldNotContact() {
+      window.location.href = 'http://getcredence.net'
+    }
+
+    function loaded() {
+      local.style.display = 'block';
+      loading.style.display = 'none';
+    }
+
+    fetch(server + '/ping').then(
+      function(response) {  
+        switch(response.status) {
+          case 200:
+            local.addEventListener('load', loaded);
+            local.src = server;
+            break;
+          default:
+            couldNotContact();
+        }
+      }  
+    ).catch(couldNotContact);
+  </script>
+</body>
+</html>
