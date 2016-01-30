@@ -7,43 +7,49 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/screen.css">
   <style>
-  body {
-    margin: 0;
-  }
-  #local {
-    display: none;
-    border: none;
-    height: 100vh;
-    width: 100vw;
-  }
-  #download {
-    display:none;
-  }
+  #notfound { display: none; }
   </style>
 </head>
 <body>
-  <iframe id="local"></iframe>
-  <div id="loading">
-    <h1>Looking for Credence on your machine…</h1>
+  <div class="container">
+    <div class="header clearfix">
+      <nav>
+        <ul class="nav nav-pills pull-xs-right">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://medium.com/musings-by-jp/the-web-s-missing-communication-faculty-e2f910b908fa">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/jphastings/credence">Github</a>
+          </li>
+        </ul>
+      </nav>
+      <h3 class="text-muted">Credence</h3>
+    </div>
+
+    <div class="jumbotron" id="searching">
+      <h1 class="display-2">Searching…</h1>
+      <p class="lead">We're looking for your personal Credence server. Please wait a moment.</p>
+    </div>
+
+    <div class="jumbotron" id="notfound">
+      <h1 class="display-4">Local Credence not found</h1>
+      <p class="lead">We couldn't find your personal Credence server. You may want to <a href="https://github.com/jphastings/credence#usage">download and install</a> Credence to get started, or you can <a href="#">get in touch with the community</a> for help.</p>
+      <a class="btn btn btn-success-outline" href="/" target="_blank" role="button">Return to Credence</a>
+    </div>
   </div>
   <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch"></script>
   <script src="/js/helpers.js"></script>
   <script>
-    var local = document.getElementById('local');
-    var loading = document.getElementById('loading');
-    
     function found(server) {
-      local.addEventListener('load', loaded);
-      local.src = server;
+      window.location.href = server;
     }
 
     function notFound() {
-      window.location.href = 'http://getcredence.net'
-    }
-
-    function loaded() {
-      local.style.display = 'block';
-      loading.style.display = 'none';
+      document.getElementById('notfound').style.display = 'block';
+      document.getElementById('searching').style.display = 'none';
     }
 
     Credence.detectLocalInstance(found, notFound);

@@ -46,12 +46,11 @@ body {
 }
 
 .jumbotron p {
-  max-width: 24rem;
   margin: 1.2rem auto;
 }
 
 .btn .icon {
-  height: 1.4rem;
+  height: 1.3rem;
   margin-right: 0.2rem;
   top: -0.1rem;
   position: relative;
@@ -76,10 +75,14 @@ body {
   }
 }
 
+.jumbotron.narrow p {
+  max-width: 24rem;
+} 
+
 .blockquote-footer .list-inline {
   display: inline;
 }
 
-section#cred, hr.tall {
+section, hr.tall {
   margin: 4rem 0;
 }
