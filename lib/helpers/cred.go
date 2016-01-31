@@ -13,6 +13,7 @@ import (
 
 func StatementHash(cred *credence.Cred) string {
   statementCred := &credence.Cred{
+    SourceUri: cred.SourceUri,
     Statement: cred.Statement,
   }
 

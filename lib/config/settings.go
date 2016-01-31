@@ -52,6 +52,10 @@ type Config struct {
     Host string
     Port int
   }
+  Broadcatcher struct {
+    Host string
+    Port int
+  }
   SearchRequests struct {
     ForwardProximityLimit int32
   }
@@ -67,7 +71,10 @@ Type=sqlite3
 ConnectionString=credence.db
 [Broadcaster]
 Host=0.0.0.0
-Port=9099
+Port=27336
+[Broadcatcher]
+Host=0.0.0.0
+Port=27334
 [SearchRequests]
 ForwardProximityLimit=3
 `
