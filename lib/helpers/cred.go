@@ -16,7 +16,11 @@ func StatementHash(cred *credence.Cred) string {
     Statement: cred.Statement,
   }
 
-  statementCredBytes, err := proto.Marshal(statementCred)
+  return CredHash(statementCred)
+}
+
+func CredHash(cred *credence.Cred) string {
+  statementCredBytes, err := proto.Marshal(cred)
   if err != nil {
     panic(err)
   }

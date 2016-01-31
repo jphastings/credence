@@ -15,7 +15,8 @@ func StartAPI(wg sync.WaitGroup) {
   config := config.Read()
   listenUri := fmt.Sprintf("%s:%d", config.Server.Host, config.Server.Port)
 
-  http.HandleFunc("/creds/info", api.InfoCredHandler)
+  http.HandleFunc("/creds/info", api.RawCredHandler)
+  http.HandleFunc("/creds/info/", api.InfoCredHandler)
   http.HandleFunc("/creds", CredHandler)
   http.HandleFunc("/connect", ConnectHandler)
   http.HandleFunc("/ping", PingHandler)

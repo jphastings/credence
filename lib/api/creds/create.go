@@ -22,9 +22,15 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
+  fingerprint := len(r.URL.Query()["fingerprint"]) > 0
+  confirm := len(r.URL.Query()["confirm"]) > 0
+
   signingUser := models.Me()
 
-  fingerprint := r.URL.Query()["fingerprint"] != nil
+  if !confirm && helpers.StatementAlreadyMade(cred, signingUser) {
+    w.WriteHeader(http.StatusConflict)
+    return
+  }
 
   if fingerprint {
     cred.AuthorFingerprint, _ = hex.DecodeString(signingUser.Fingerprint)

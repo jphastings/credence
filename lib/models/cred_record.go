@@ -2,21 +2,22 @@ package models
 
 import (
   "time"
-  "database/sql"
   "github.com/golang/protobuf/proto"
   "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/definitions/credence"
 )
 
 type CredRecord struct {
-  ID int
+  ID uint `gorm:"primary_key"`
   SourceUri string
   CredBytes []byte 
   // The detected author of this cred
   Author User
-  AuthorID sql.NullInt64
-  // An identifier for this statement in this context; the hash of the keys and statement
+  AuthorID uint
+  // An identifier for this statement in this context; the hash of the source uri and statement
   StatementHash string
+  // An identifier for the specific Cred
+  CredHash string `sql:unique_index`
   // The time this cred was received
   ReceivedAt time.Time
 

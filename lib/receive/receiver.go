@@ -74,7 +74,8 @@ func RouteMessage(message *credence.Message) {
 
   cred := message.GetCred()
   if cred != nil {
-    if helpers.StoreCredUnknownAuthor(cred) {
+    newCred, _ := helpers.StoreCredUnknownAuthor(cred)
+    if newCred {
       BroadcastMessage(message)
     }
   }

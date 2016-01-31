@@ -37,8 +37,10 @@ func Setup() {
     &SentMessage{},
   )
 
-  db.Model(&CredRecord{}).AddUniqueIndex("idx_cred_bytes", "cred_bytes")
+  db.Model(&CredRecord{}).AddUniqueIndex("idx_cred_hash", "cred_hash")
+  db.Model(&CredRecord{}).AddUniqueIndex("idx_statement_hash", "statement_hash")
   db.Model(&SentMessage{}).AddUniqueIndex("idx_message_hash", "message_hash")
+  db.Model(&User{}).AddUniqueIndex("idx_fingerprint", "fingerprint")
 }
 
 func DB() gorm.DB {

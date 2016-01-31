@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-  ID int `sql:"AUTO_INCREMENT"`
+  ID uint `gorm:"primary_key"`
   Name string
   // The public key fingerprint
   Fingerprint string

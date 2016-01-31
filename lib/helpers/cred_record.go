@@ -7,22 +7,26 @@ import (
   "github.com/jphastings/credence/lib/definitions/credence"
 )
 
-func StoreCredUnknownAuthor(cred *credence.Cred) bool {
+func StoreCredUnknownAuthor(cred *credence.Cred) (bool, string) {
   author, _ := DetectAuthor(cred)
   // TODO: propagate error 
   return StoreCredWithAuthor(cred, author)
 }
 
-func StoreCredWithAuthor(cred *credence.Cred, author models.User) bool {
+func StoreCredWithAuthor(cred *credence.Cred, author models.User) (bool, string) {
   credBytes, _ := proto.Marshal(cred)
 
   db := models.DB()
   var credRecord models.CredRecord
-  db.FirstOrInit(&credRecord, models.CredRecord{CredBytes: credBytes})
+  credHash := CredHash(cred)
 
-  if db.NewRecord(credRecord) {
+  db.FirstOrInit(&credRecord, models.CredRecord{CredHash: credHash})
+  newCred := db.NewRecord(credRecord)
+
+  if newCred {
     credRecord.Author = author
     credRecord.StatementHash = StatementHash(cred)
+    credRecord.CredBytes = credBytes
     credRecord.SourceUri = cred.SourceUri
     credRecord.ReceivedAt = time.Now()
     
@@ -32,8 +36,24 @@ func StoreCredWithAuthor(cred *credence.Cred, author models.User) bool {
     credRecord.IsAmbiguous = cred.Assertion == credence.Cred_IS_AMBIGUOUS
 
     db.Save(&credRecord)
-    return true
-  } else {
-    return false
   }
+
+  return newCred, credHash
+}
+
+func StatementAlreadyMade(cred *credence.Cred, user models.User) bool {
+  db := models.DB()
+  var credRecord models.CredRecord
+  db.First(&credRecord, models.CredRecord{
+    StatementHash: StatementHash(cred),
+    AuthorID: user.ID,
+  })
+  return !db.NewRecord(credRecord)
+}
+
+func CredRecordFromCredHash(credHash string) (models.CredRecord, bool) {
+  db := models.DB()
+  credRecord := &models.CredRecord{}
+  db.Where("cred_hash = ?", credHash).Preload("Author").First(credRecord)
+  return *credRecord, !db.NewRecord(credRecord)
 }

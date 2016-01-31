@@ -35,18 +35,19 @@ func InfoCredHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  cred, err := helpers.CredFromBase64(r.URL.Query()["cred"][0])
-  if err != nil {
-    w.WriteHeader(http.StatusBadRequest)
+  // TODO: This is a hack, need proper routing
+  credHash := r.URL.Path[12:]
+
+  credRecord, found := helpers.CredRecordFromCredHash(credHash)
+  if !found {
+    w.WriteHeader(http.StatusNotFound)
+    // TODO: Pretty 404
     return
   }
 
-  author, err := helpers.DetectAuthor(cred)
-  if err != nil {
-    panic(err)
-  }
+  cred := credRecord.Cred()
 
-  sourceUri, err := url.Parse(cred.SourceUri)
+  sourceUri, _ := url.Parse(cred.SourceUri)
 
   props := TemplateProps{
     Assertion: cred.Assertion.String(),
@@ -56,7 +57,7 @@ func InfoCredHandler(w http.ResponseWriter, r *http.Request) {
       String: sourceUri.Host,
       Url: cred.SourceUri,
     },
-    Author: author,
+    Author: credRecord.Author,
   }
 
   w.WriteHeader(http.StatusOK)
