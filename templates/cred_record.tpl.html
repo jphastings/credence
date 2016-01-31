@@ -45,19 +45,19 @@
       <div>
         {{if eq .Assertion "NO_COMMENT"}}
           <div class="alert alert-info">
-            <p>They went out of their way to say "<strong>no comment</strong>" on whether this statement is true or false;
+            <p>They went out of their way to say "<strong>no comment</strong>" on whether this statement is true or false,
         {{end}}
         {{if eq .Assertion "IS_TRUE"}}
           <div class="alert alert-success">
-            <p>They think this is <strong>true</strong>;
+            <p>They think this is <strong>true</strong>,
         {{end}}
         {{if eq .Assertion "IS_FALSE"}}
           <div class="alert alert-danger">
-            <p>They think this is <strong>false</strong>;
+            <p>They think this is <strong>false</strong>,
         {{end}}
         {{if eq .Assertion "IS_AMBIGUOUS"}}
           <div class="alert alert-warning">
-            <p>They think this is <strong>ambiguous</strong>, contradictory to itself or that it makes no sense;
+            <p>They think this is <strong>ambiguous</strong>, contradictory to itself or that it makes no sense,
         {{end}}
 
           {{if .ProofUri}}
