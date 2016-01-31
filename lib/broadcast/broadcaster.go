@@ -1,36 +1,13 @@
 package broadcast
 
 import (
-  "fmt"
   "log"
   "sync"
   "time"
   "encoding/hex"
-  "github.com/zeromq/goczmq"
   "github.com/spacemonkeygo/openssl"
-  "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/models"
 )
-
-var receiver *goczmq.Sock
-var broadcaster *goczmq.Sock
-
-func Setup() {
-  config := config.Read()
-  broadcastUri := fmt.Sprintf("tcp://%s:%d", config.Broadcaster.Host, config.Broadcaster.Port)
-
-  var err error
-  broadcaster, err = goczmq.NewPub(broadcastUri)
-  if err != nil {
-    panic(err)
-  }
-  log.Println("Broadcaster will start on", broadcastUri)
-
-  receiver, err = goczmq.NewPull("inproc://broadcast")
-  if err != nil {
-    panic(err)
-  }
-}
 
 func StartBroadcaster(wg sync.WaitGroup) {
   defer wg.Done()
@@ -57,10 +34,17 @@ func StartBroadcaster(wg sync.WaitGroup) {
     var previouslySent models.SentMessage
     db.Where("message_hash = ? AND sent_at > ?", messageHash, time.Now().Add(-5 * time.Minute)).First(&previouslySent)
 
-    if previouslySent.MessageHash == "" {
+    if db.NewRecord(previouslySent.MessageHash) {
       log.Println("Broadcasting message", messageHash)
 
       _, err = broadcaster.Write(msgBytes)
+      if err != nil {
+        panic(err)
+      }
+
+      log.Println("Pitching message", messageHash)
+
+      _, err = pitcher.Write(msgBytes)
       if err != nil {
         panic(err)
       }

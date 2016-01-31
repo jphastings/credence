@@ -1,7 +1,6 @@
 package receive
 
 import (
-  "fmt"
   "log"
   "sync"
   "github.com/golang/protobuf/proto"
@@ -29,11 +28,4 @@ func StartReceiver(wg sync.WaitGroup) {
     }
     RouteMessage(message)
   }
-}
-
-func ConnectToBroadcaster(uri string) error {
-  broadcasterUri := fmt.Sprintf("tcp://%s", uri)
-  log.Println("Connecting to", broadcasterUri)
-  err := receiver.Connect(broadcasterUri)
-  return err
 }

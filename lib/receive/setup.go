@@ -5,7 +5,7 @@ import (
 	"fmt"
   "github.com/zeromq/goczmq"
   "github.com/jphastings/credence/lib/config"
-  "github.com/jphastings/credence/lib/models"
+  "github.com/jphastings/credence/lib/helpers"
 )
 
 var receiver *goczmq.Sock
@@ -31,17 +31,12 @@ func Setup() {
   receiver = goczmq.NewSock(goczmq.Sub)
   receiver.SetSubscribe("")
 
-  db := models.DB()
-  rows, _ := db.Model(models.Peer{}).Rows()
+  helpers.ConnectToPeers(false, ConnectToBroadcaster)
+}
 
-  for rows.Next() {
-    var (
-      peerUri string
-      isBroadcatcher bool
-    )
-    rows.Scan(&peerUri, &isBroadcatcher)
-    if !isBroadcatcher {
-      ConnectToBroadcaster(peerUri)
-    }
-  }
+func ConnectToBroadcaster(uri string) error {
+  broadcasterUri := fmt.Sprintf("tcp://%s", uri)
+  log.Println("Connecting to broadcaster at", broadcasterUri)
+  err := receiver.Connect(broadcasterUri)
+  return err
 }
