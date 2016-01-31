@@ -18,6 +18,7 @@ func Setup() {
   connectionString := cfg.DB.ConnectionString
   if cfg.DB.Type == "sqlite3" {
     connectionString = config.ConfigFile(connectionString)
+    log.Println("Using SQLite DB at", connectionString)
   }
   for {
     db, err = gorm.Open(cfg.DB.Type, connectionString)
