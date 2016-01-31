@@ -41,15 +41,14 @@ func (credRecord CredRecord) Cred() (*credence.Cred) {
 func SearchCreds(key string) []*credence.Cred {
   var (
     results []*credence.Cred
-    rows []*CredRecord
+    credRecords []*CredRecord
   )
 
   db.
-    Select("cred_bytes").
     Where("source_uri LIKE ?", key).
-    Find(&rows)
+    Find(&credRecords)
 
-  for _, credRecord := range rows {
+  for _, credRecord := range credRecords {
     results = append(results, credRecord.Cred())
   }
 

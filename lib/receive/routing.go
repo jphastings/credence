@@ -9,37 +9,51 @@ import (
 )
 
 func RouteMessage(message *credence.Message) {
-  config := config.Read()
+  rebroadcast := false
 
   cred := message.GetCred()
   if cred != nil {
-    newCred, _ := helpers.StoreCredUnknownAuthor(cred)
-    if newCred {
-      BroadcastMessage(message)
-    }
+    rebroadcast = ProcessInboundCred(cred)
   }
 
   searchRequest := message.GetSearchRequest()
   if searchRequest != nil {
-    // TODO: Store search request
+    rebroadcast = ProcessInboundSearchRequest(searchRequest)
+  }
 
-    if searchRequest.Proximity <= config.SearchRequests.ForwardProximityLimit {
-      searchRequest.Proximity += 1
-      BroadcastMessage(message)
+  if rebroadcast {
+    BroadcastMessage(message)
+  }
+}
 
-      for _, key := range searchRequest.Keys {
-        for _, cred := range models.SearchCreds(key) {
-          credMsg := &credence.Message{
-            Type: &credence.Message_Cred{
-              Cred: cred,
-            },
-          }
+func ProcessInboundCred(cred *credence.Cred) bool {
+  notSeenBefore, _ := helpers.StoreCredUnknownAuthor(cred)
+  return notSeenBefore
+}
 
-          BroadcastMessage(credMsg)
+// Return: whether or not to rebroadcast the message
+func ProcessInboundSearchRequest(searchRequest *credence.SearchRequest) bool {
+  config := config.Read()
+  // TODO: Store search request
+
+  if searchRequest.Proximity <= config.SearchRequests.ForwardProximityLimit {
+    searchRequest.Proximity += 1
+
+    for _, key := range searchRequest.Keys {
+      for _, cred := range models.SearchCreds(key) {
+        credMsg := &credence.Message{
+          Type: &credence.Message_Cred{
+            Cred: cred,
+          },
         }
+
+        BroadcastMessage(credMsg)
       }
     }
+
+    return true
   }
+  return false
 }
 
 func BroadcastMessage(message *credence.Message) {
