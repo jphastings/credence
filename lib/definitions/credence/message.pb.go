@@ -24,7 +24,7 @@ type Message struct {
 func (m *Message) Reset()                    { *m = Message{} }
 func (m *Message) String() string            { return proto.CompactTextString(m) }
 func (*Message) ProtoMessage()               {}
-func (*Message) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
+func (*Message) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0} }
 
 type isMessage_Type interface {
 	isMessage_Type()
@@ -139,7 +139,7 @@ func init() {
 	proto.RegisterType((*Message)(nil), "credence.Message")
 }
 
-var fileDescriptor1 = []byte{
+var fileDescriptor2 = []byte{
 	// 137 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0xcd, 0x4d, 0x2d, 0x2e,
 	0x4e, 0x4c, 0x4f, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x48, 0x2e, 0x4a, 0x4d, 0x49,

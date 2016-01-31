@@ -7,17 +7,17 @@ Package credence is a generated protocol buffer package.
 
 It is generated from these files:
 	cred.proto
+	identity_assertion.proto
 	message.proto
 	search_request.proto
 	search_result.proto
-	user.proto
 
 It has these top-level messages:
 	Cred
+	IdentityAssertion
 	Message
 	SearchRequest
 	SearchResult
-	User
 */
 package credence
 

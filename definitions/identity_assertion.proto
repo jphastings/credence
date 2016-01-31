@@ -16,8 +16,8 @@ package credence;
 //     public key, and the associated private key used to make the signature.
 //   - When counter-signing, the fingerprint should be of the counter-signing user
 //     and the signature created using their private key.
-message User {
-  // Their public key
+message IdentityAssertion {
+  // Their public key, in DER format
   bytes public_key = 1;
   // The name this user suggests they should go by within Credence.
   string name = 2;

@@ -22,7 +22,7 @@ type SearchResult struct {
 func (m *SearchResult) Reset()                    { *m = SearchResult{} }
 func (m *SearchResult) String() string            { return proto.CompactTextString(m) }
 func (*SearchResult) ProtoMessage()               {}
-func (*SearchResult) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0} }
+func (*SearchResult) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
 
 func (m *SearchResult) GetResults() []*SearchResult_SourceBreakdown {
 	if m != nil {
@@ -52,7 +52,7 @@ func (m *SearchResult_AssertionBreakdown) Reset()         { *m = SearchResult_As
 func (m *SearchResult_AssertionBreakdown) String() string { return proto.CompactTextString(m) }
 func (*SearchResult_AssertionBreakdown) ProtoMessage()    {}
 func (*SearchResult_AssertionBreakdown) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 0}
+	return fileDescriptor4, []int{0, 0}
 }
 
 type isSearchResult_AssertionBreakdown_Statement interface {
@@ -234,7 +234,7 @@ type SearchResult_SourceBreakdown struct {
 func (m *SearchResult_SourceBreakdown) Reset()                    { *m = SearchResult_SourceBreakdown{} }
 func (m *SearchResult_SourceBreakdown) String() string            { return proto.CompactTextString(m) }
 func (*SearchResult_SourceBreakdown) ProtoMessage()               {}
-func (*SearchResult_SourceBreakdown) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 1} }
+func (*SearchResult_SourceBreakdown) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0, 1} }
 
 func (m *SearchResult_SourceBreakdown) GetAssertions() []*SearchResult_AssertionBreakdown {
 	if m != nil {
@@ -249,7 +249,7 @@ func init() {
 	proto.RegisterType((*SearchResult_SourceBreakdown)(nil), "credence.SearchResult.SourceBreakdown")
 }
 
-var fileDescriptor3 = []byte{
+var fileDescriptor4 = []byte{
 	// 375 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x74, 0x92, 0xdf, 0xca, 0xd3, 0x30,
 	0x18, 0xc6, 0xfd, 0xec, 0xe7, 0xb7, 0xf5, 0xdd, 0xd8, 0x24, 0x0e, 0x09, 0x3b, 0x1a, 0x82, 0x32,

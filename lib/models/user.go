@@ -4,7 +4,7 @@ type User struct {
   ID uint `gorm:"primary_key"`
   Name string
   // The public key fingerprint
-  Fingerprint string
+  Fingerprint []byte
   // This user's public key
   PublicKey []byte
   // An identifying URI

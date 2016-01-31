@@ -4,7 +4,6 @@ import (
   "os"
   "log"
   "io/ioutil"
-  "encoding/hex"
   "github.com/spacemonkeygo/openssl"
   "github.com/jphastings/credence/lib/models"
   "github.com/jphastings/credence/lib/config"
@@ -50,19 +49,19 @@ func CreatePrivateKey() openssl.PrivateKey {
 }
 
 func SavePublicKeyToDB(privateKey openssl.PrivateKey) {
-  publicPemBlock, err := privateKey.MarshalPKIXPublicKeyPEM()
+  publicDerBlock, err := privateKey.MarshalPKIXPublicKeyDER()
   if err != nil {
     panic(err)
   }
 
-  fingerprint, err := openssl.SHA1(publicPemBlock)
+  fingerprint, err := openssl.SHA256(publicDerBlock)
   if err != nil {
     panic(err)
   }
 
   me := models.Me()
-  me.PublicKey = publicPemBlock
-  me.Fingerprint = hex.EncodeToString(fingerprint[:])
+  me.PublicKey = publicDerBlock
+  me.Fingerprint = fingerprint[:]
   db := models.DB()
   db.Save(&me)
   log.Print("Stored self public key in user DB")
@@ -75,7 +74,7 @@ func SavePublicKeyIfNeccessary() {
   }
 
   me := models.Me()
-  if me.Fingerprint == "" {
+  if me.Fingerprint == nil {
     SavePublicKeyToDB(privateKey)
   }
 }
@@ -85,3 +84,16 @@ func HasPrivateKey() bool {
   return err == nil
 }
 
+func SignBytes(bytes []byte) []byte {
+  privateKey, err := LoadPrivateKey()
+  if err != nil {
+    panic(err)
+  }
+
+  sig, err := privateKey.SignPKCS1v15(openssl.SHA256_Method, bytes)
+  if err != nil {
+    panic(err)
+  }
+
+  return sig
+}

@@ -5,7 +5,6 @@ import (
   "log"
   "time"
   "net/http"
-  "encoding/hex"
   "github.com/zeromq/goczmq"
   "github.com/golang/protobuf/proto"
   "github.com/golang/protobuf/jsonpb"
@@ -33,7 +32,7 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   if fingerprint {
-    cred.AuthorFingerprint, _ = hex.DecodeString(signingUser.Fingerprint)
+    cred.AuthorFingerprint = signingUser.Fingerprint
   }
 
   // Set attributes

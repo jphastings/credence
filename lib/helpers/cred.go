@@ -36,16 +36,7 @@ func CredHash(cred *credence.Cred) string {
 
 func SetSignature(cred *credence.Cred) error {
   sigCredBytes := SignableCredBytes(cred)
-
-  privateKey, err := LoadPrivateKey()
-  if err != nil {
-    return err
-  }
-
-  cred.Signature, err = privateKey.SignPKCS1v15(openssl.SHA256_Method, sigCredBytes)
-  if err != nil {
-    return err
-  }
+  cred.Signature = SignBytes(sigCredBytes)
 
   return nil
 }
