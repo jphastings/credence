@@ -86,3 +86,9 @@ body {
 section, hr.tall {
   margin: 4rem 0;
 }
+
+@media screen and (max-width: 32em) {
+  .display-2 {
+    font-size: 3.8rem;
+  }
+}
