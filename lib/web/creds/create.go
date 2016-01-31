@@ -73,6 +73,7 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
 
   var credMarshaled string
 
+  // TODO: Use negotiator
   // Respond over HTTP
   switch r.Header.Get("Accept") {
   case "application/vnd.google.protobuf":

@@ -13,14 +13,17 @@ func AssertIdentity(user *models.User) *credence.IdentityAssertion {
     PublicKey: user.PublicKey,
     Name: user.Name,
     IdentityUri: user.IdentityUri,
-    Fingerprint: me.Fingerprint,
   }
 
-  bytes, err := proto.Marshal(identityAssertion)
-  if err != nil {
-    panic(err)
+  if HasPrivateKey() {
+    identityAssertion.Fingerprint = me.Fingerprint
+
+    bytes, err := proto.Marshal(identityAssertion)
+    if err != nil {
+      panic(err)
+    }
+    identityAssertion.Signature = SignBytes(bytes)
   }
-  identityAssertion.Signature = SignBytes(bytes)
 
   return identityAssertion
 }

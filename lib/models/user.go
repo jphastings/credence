@@ -1,5 +1,9 @@
 package models
 
+import (
+  "time"
+)
+
 type User struct {
   ID uint `gorm:"primary_key"`
   Name string
@@ -10,6 +14,9 @@ type User struct {
   // An identifying URI
   IdentityUri string
   Weight int `sql:"default 1"`
+
+  CreatedAt time.Time
+  UpdatedAt time.Time
 }
 
 func Me() User {

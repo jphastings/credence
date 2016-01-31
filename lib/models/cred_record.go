@@ -105,3 +105,16 @@ func SearchCredsBreakdown(key string) []*credence.SearchResult_SourceBreakdown {
 
   return results
 }
+
+func CredRecordSample(fingerprint []byte, max uint) []*CredRecord {
+  var credRecords []*CredRecord
+
+  db.
+    Where(&User{Fingerprint: fingerprint}).
+    Joins("left join users a on author_id = a.id").
+    Limit(max).
+    Order("received_at desc").
+    Find(&credRecords)
+
+  return credRecords
+}
