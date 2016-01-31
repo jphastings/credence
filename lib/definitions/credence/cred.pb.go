@@ -10,12 +10,14 @@ It is generated from these files:
 	message.proto
 	search_request.proto
 	search_result.proto
+	user.proto
 
 It has these top-level messages:
 	Cred
 	Message
 	SearchRequest
 	SearchResult
+	User
 */
 package credence
 

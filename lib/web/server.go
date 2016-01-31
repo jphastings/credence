@@ -1,4 +1,4 @@
-package api
+package web
 
 import (
   "fmt"
@@ -7,10 +7,10 @@ import (
   "net/http"
   "github.com/toqueteos/webbrowser"
   "github.com/jphastings/credence/lib/config"
-  "github.com/jphastings/credence/lib/api/creds"
+  "github.com/jphastings/credence/lib/web/creds"
 )
 
-func StartAPI(wg sync.WaitGroup) {
+func StartWeb(wg sync.WaitGroup) {
   defer wg.Done()
 
   config := config.Read()
@@ -18,9 +18,12 @@ func StartAPI(wg sync.WaitGroup) {
 
   mux := http.NewServeMux()
 
-  mux.HandleFunc("/creds/info", api.RawCredHandler)
-  mux.HandleFunc("/creds/info/", api.InfoCredHandler)
+  mux.HandleFunc("/creds/info", web.RawCredHandler)
+  mux.HandleFunc("/creds/info/", web.InfoCredHandler)
   mux.HandleFunc("/creds", CredHandler)
+
+  mux.HandleFunc("/users/", UsersHandler)
+
   mux.HandleFunc("/connect", ConnectHandler)
   mux.HandleFunc("/ping", PingHandler)
   mux.HandleFunc("/protocol-handler", ProtocolHandlerHandler)

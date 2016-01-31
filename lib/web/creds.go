@@ -1,17 +1,17 @@
-package api
+package web
 
 import (
   "net/http"
   "github.com/jphastings/credence/lib/helpers"
-  "github.com/jphastings/credence/lib/api/creds"
+  "github.com/jphastings/credence/lib/web/creds"
 )
 
 func CredHandler(w http.ResponseWriter, r *http.Request) {
   switch r.Method {
-    case "GET": api.SearchCredHandler(w, r)
+    case "GET": web.SearchCredHandler(w, r)
     case "POST":
       if helpers.HasPrivateKey() {
-        api.CreateCredHandler(w, r)
+        web.CreateCredHandler(w, r)
       } else {
         w.WriteHeader(http.StatusMethodNotAllowed)
       }

@@ -30,7 +30,7 @@
     <section id="cred">
       <p>
         {{if .Author.IdentityUri}}
-          <a href="{{.Author.IdentityUri}}" target="_blank">{{if .Author.Name}}{{.Author.Name}}{{else}}An unnamed internet user{{end}}</a>
+          <a href="/users/{{.Author.ID}}" target="_blank">{{if .Author.Name}}{{.Author.Name}}{{else}}An unnamed internet user{{end}}</a>
         {{else}}
           An <span data-toggle="tooltip" title="This Credence system does not have the ID that would allow it to recognise the author of this Cred.">anonymous internet user</span>
         {{end}}

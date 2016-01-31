@@ -4,7 +4,7 @@ import (
   "sync"
   "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/models"
-  "github.com/jphastings/credence/lib/api"
+  "github.com/jphastings/credence/lib/web"
   "github.com/jphastings/credence/lib/helpers"
   "github.com/jphastings/credence/lib/broadcast"
   "github.com/jphastings/credence/lib/receive"
@@ -23,7 +23,7 @@ func main() {
   go broadcast.StartBroadcaster(wg)
   go receive.StartReceiver(wg)
   go receive.StartBroadcatcher(wg)
-  go api.StartAPI(wg)
+  go web.StartWeb(wg)
 
   wg.Wait()
 }

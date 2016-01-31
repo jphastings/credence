@@ -1,4 +1,4 @@
-package api
+package web
 
 import (
   "net/http"
@@ -6,6 +6,7 @@ import (
   "github.com/jphastings/credence/lib/receive"
 )
 
+// TODO: Allow addition of broadcatchers too
 func ConnectHandler(w http.ResponseWriter, r *http.Request) {
   switch r.Method {
     case "POST":
@@ -15,7 +16,7 @@ func ConnectHandler(w http.ResponseWriter, r *http.Request) {
         err := receive.ConnectToBroadcaster(uri)
         if err == nil {
           db := models.DB()
-          db.FirstOrCreate(new(models.Peer), models.Peer{Server: uri})
+          db.FirstOrCreate(new(models.Peer), models.Peer{Server: uri, IsBroadcatcher: false})
         } else {
           w.WriteHeader(http.StatusBadRequest)
           return

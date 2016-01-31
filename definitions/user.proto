@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package credence;
+
+// A statement that there is a public/private key pair that a person is using
+// with Credence.
+// - The public key in question is stated outright.
+// - The person claiming to own the associated private key can be identified
+//   by the identity_uri (and possibly the name).
+// - The proof_uri might be a link to a post on twitter by the user saying "I am
+//   a Credence User with fingerprint 00112233445566778899aabbccddeeff" allowing
+//   other users to make a judgement call as to whether that is the person they
+//   are expecting.
+// - Any user can sign the assertion that this public key is associated to this identity.
+//   - When self-signing, the fingerprint should be the fingerprint of the given
+//     public key, and the associated private key used to make the signature.
+//   - When counter-signing, the fingerprint should be of the counter-signing user
+//     and the signature created using their private key.
+message User {
+  // Their public key
+  bytes public_key = 1;
+  // The name this user suggests they should go by within Credence.
+  string name = 2;
+  // The main URI that can be used by others to distinguish this user from others with the same name. eg. a Twitter profile
+  string identity_uri = 3;
+  // A URI that attempts to prove that the paired private key is owned by the identity stated.
+  string proof_uri = 4;
+
+  // The fingerprint of the user asserting this name and public key are related.
+  bytes fingerprint = 5;
+  // A signature of this message (with this fields blanked) by the private key referenced by the fingerprint
+  bytes signature = 6;
+}
