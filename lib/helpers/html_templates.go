@@ -23,7 +23,7 @@ func init() {
 func RenderTemplate(w http.ResponseWriter, templateName string, props viewModels.Props) bool {
   tpl := templates[templateName]
   if tpl == nil {
-    w.WriteHeader(http.StatusInternalServerError)
+    w.WriteHeader(http.StatusNotAcceptable)
     return false
   }
   tpl.Execute(w, props)

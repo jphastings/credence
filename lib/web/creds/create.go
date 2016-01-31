@@ -1,7 +1,6 @@
 package web
 
 import (
-  "io"
   "log"
   "time"
   "net/http"
@@ -71,29 +70,5 @@ func CreateCredHandler(w http.ResponseWriter, r *http.Request) {
       panic(err)
   }
 
-  var credMarshaled string
-
-  // TODO: Use negotiator
-  // Respond over HTTP
-  switch r.Header.Get("Accept") {
-  case "application/vnd.google.protobuf":
-    w.Header().Set("Content-Type", "application/vnd.google.protobuf")
-    credBytes, _ := proto.Marshal(cred)
-    credMarshaled = string(credBytes)
-  case "text/html":
-    url := helpers.CredUri(cred)
-    w.Header().Set("Location", url)
-    w.WriteHeader(http.StatusSeeOther)
-    return
-  case "application/json":
-    w.Header().Set("Content-Type", "application/json")
-    marshaler := jsonpb.Marshaler{}
-    credMarshaled, _ = marshaler.MarshalToString(cred)
-  default:
-    w.WriteHeader(http.StatusNotAcceptable)
-    return
-  }
-  
-  w.WriteHeader(http.StatusCreated)
-  io.WriteString(w, credMarshaled)
+  helpers.ModelNegotiator().Negotiate(w, r, cred)
 }

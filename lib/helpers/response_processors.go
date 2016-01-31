@@ -72,7 +72,8 @@ func (*HTMLTemplatePBResponseProcessor) Process(w http.ResponseWriter, model int
   } else if isCredRecord {
     templateName, props = viewModels.Retrieve(record)
   } else {
-    panic("Don't how know to HTML render this thing")
+    w.WriteHeader(http.StatusNotAcceptable)
+    return nil
   }
   
   if RenderTemplate(w, templateName, props) {
