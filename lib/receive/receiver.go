@@ -33,9 +33,14 @@ func Setup() {
   rows, _ := db.Model(models.Peer{}).Rows()
 
   for rows.Next() {
-    var peerUri string
-    rows.Scan(&peerUri)
-    ConnectToBroadcaster(peerUri)
+    var (
+      peerUri string
+      isBroadcatcher bool
+    )
+    rows.Scan(&peerUri, &isBroadcatcher)
+    if !isBroadcatcher {
+      ConnectToBroadcaster(peerUri)
+    }
   }
 }
 
