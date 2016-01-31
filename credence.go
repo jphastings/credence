@@ -18,10 +18,11 @@ func main() {
   helpers.SavePublicKeyIfNeccessary()
 
   var wg sync.WaitGroup
-  wg.Add(3)
+  wg.Add(4)
 
   go broadcast.StartBroadcaster(wg)
   go receive.StartReceiver(wg)
+  go receive.StartBroadcatcher(wg)
   go api.StartAPI(wg)
 
   wg.Wait()

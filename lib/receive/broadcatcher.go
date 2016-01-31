@@ -1,25 +1,24 @@
 package receive
 
 import (
-  "fmt"
   "log"
   "sync"
   "github.com/golang/protobuf/proto"
   "github.com/jphastings/credence/lib/definitions/credence"
 )
 
-func StartReceiver(wg sync.WaitGroup) {
+func StartBroadcatcher(wg sync.WaitGroup) {
   defer wg.Done()
 
   msgBytes := make([]byte, 524288) // 0.5 Mb
 
   for {
-    _, err := receiver.Read(msgBytes)
+    _, err := broadcatcher.Read(msgBytes)
     if err != nil {
       log.Print(err)
       continue
     }
-    log.Print("Message received")
+    log.Print("Message broadcaught")
 
     message := &credence.Message{}
     err = proto.Unmarshal(msgBytes, message)
@@ -29,11 +28,4 @@ func StartReceiver(wg sync.WaitGroup) {
     }
     RouteMessage(message)
   }
-}
-
-func ConnectToBroadcaster(uri string) error {
-  broadcasterUri := fmt.Sprintf("tcp://%s", uri)
-  log.Println("Connecting to", broadcasterUri)
-  err := receiver.Connect(broadcasterUri)
-  return err
 }

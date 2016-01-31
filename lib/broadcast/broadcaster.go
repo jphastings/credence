@@ -24,7 +24,7 @@ func Setup() {
   if err != nil {
     panic(err)
   }
-  log.Println("Broadcaster started on", broadcastUri)
+  log.Println("Broadcaster will start on", broadcastUri)
 
   receiver, err = goczmq.NewPull("inproc://broadcast")
   if err != nil {

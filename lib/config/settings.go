@@ -59,6 +59,9 @@ type Config struct {
   SearchRequests struct {
     ForwardProximityLimit int32
   }
+  Application struct {
+    OpenWebUIOnStart bool
+  }
 }
 
 func WriteDefaultConfig(configPath string, config *Config) {
@@ -77,6 +80,8 @@ Host=0.0.0.0
 Port=27334
 [SearchRequests]
 ForwardProximityLimit=3
+[Application]
+OpenWebUIOnStart=true
 `
 
   err := ioutil.WriteFile(configPath, []byte(cfgStr), 0600)
