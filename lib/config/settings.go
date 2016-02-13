@@ -22,6 +22,11 @@ func Setup() {
   Read()
 }
 
+func AssetDir(path string) string {
+  // TODO: look in ../share/credence/ if not immediately visible
+  return path
+}
+
 func ConfigFile(filename string) string {
   return filepath.Join(configDir, filename)
 }
@@ -68,7 +73,7 @@ func WriteDefaultConfig(configPath string, config *Config) {
   cfgStr := `# Credence config file
 [Server]
 Host=127.0.0.1
-Port=8808
+Port=27339
 [DB]
 Type=sqlite3
 ConnectionString=credence.db

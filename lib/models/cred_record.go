@@ -36,7 +36,6 @@ func (credRecord CredRecord) Cred() (*credence.Cred) {
  return cred
 }
 
-
 // TODO: multiple LIKEs at once
 func SearchCreds(key string) []*credence.Cred {
   var (
@@ -63,9 +62,9 @@ func SearchCredsBreakdown(key string) []*credence.SearchResult_SourceBreakdown {
   var dbSpecificSelect string
   switch cfg.DB.Type {
   case "postgres":
-    dbSpecificSelect = "source_uri, statement_hash, sum(no_comment::int * coalesce(a.weight, 1)), sum(is_true::int * coalesce(a.weight, 1)), sum(is_false::int * coalesce(a.weight, 1)), sum(is_ambiguous::int * coalesce(a.weight, 1)), sum(coalesce(a.weight, 0))"
+    dbSpecificSelect = "source_uri, statement_hash, cred_bytes, sum(no_comment::int * coalesce(a.weight, 1)), sum(is_true::int * coalesce(a.weight, 1)), sum(is_false::int * coalesce(a.weight, 1)), sum(is_ambiguous::int * coalesce(a.weight, 1)), sum(coalesce(a.weight, 0))"
   case "sqlite3":
-    dbSpecificSelect = "source_uri, statement_hash, sum(no_comment * coalesce(a.weight, 1)), sum(is_true * coalesce(a.weight, 1)), sum(is_false * coalesce(a.weight, 1)), sum(is_ambiguous * coalesce(a.weight, 1)), sum(coalesce(a.weight, 0))"
+    dbSpecificSelect = "source_uri, statement_hash, cred_bytes, sum(no_comment * coalesce(a.weight, 1)), sum(is_true * coalesce(a.weight, 1)), sum(is_false * coalesce(a.weight, 1)), sum(is_ambiguous * coalesce(a.weight, 1)), sum(coalesce(a.weight, 0))"
   }
 
   rows, err := db.
@@ -73,7 +72,7 @@ func SearchCredsBreakdown(key string) []*credence.SearchResult_SourceBreakdown {
     Select(dbSpecificSelect).
     Joins("left join users a on author_id = a.id").
     Where("source_uri LIKE ?", key).
-    Group("source_uri, statement_hash").
+    Group("source_uri, statement_hash, cred_bytes").
     Rows()
 
   if err != nil {
@@ -84,16 +83,35 @@ func SearchCredsBreakdown(key string) []*credence.SearchResult_SourceBreakdown {
     var (
       sourceUri string
       breakdown credence.SearchResult_AssertionBreakdown
+      credBytes []byte
     )
+
     rows.Scan(
       &sourceUri,
       &breakdown.StatementHash,
+      &credBytes,
       &breakdown.NoComment,
       &breakdown.IsTrue,
       &breakdown.IsFalse,
       &breakdown.IsAmbiguous,
       &breakdown.Recognised,
     )
+
+    cred := &credence.Cred{}
+    err := proto.Unmarshal(credBytes, cred)
+    if err != nil {
+      panic(err)
+    }
+    // So much hack! The statement fields are in the same place, so we can convert by doing
+    // lots of marshalling and unmarshalling…
+    justCredStatement := &credence.Cred{
+      Statement: cred.Statement,
+    }
+    statementBytes, err := proto.Marshal(justCredStatement)
+    justBreakdownStatement := &credence.SearchResult_AssertionBreakdown{}
+    err = proto.Unmarshal(statementBytes, justBreakdownStatement)
+    breakdown.Statement = justBreakdownStatement.Statement
+    // </hack>
 
     assertions := []*credence.SearchResult_AssertionBreakdown{&breakdown}
     sourceBreakdown := credence.SearchResult_SourceBreakdown{

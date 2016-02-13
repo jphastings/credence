@@ -13,8 +13,8 @@ import (
 func StartWeb(wg sync.WaitGroup) {
   defer wg.Done()
 
-  config := config.Read()
-  listenUri := fmt.Sprintf("%s:%d", config.Server.Host, config.Server.Port)
+  cfg := config.Read()
+  listenUri := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
 
   mux := http.NewServeMux()
 
@@ -28,7 +28,7 @@ func StartWeb(wg sync.WaitGroup) {
   mux.HandleFunc("/ping", PingHandler)
   mux.HandleFunc("/protocol-handler", ProtocolHandlerHandler)
 
-  static := http.FileServer(http.Dir("htdocs"))
+  static := http.FileServer(http.Dir(config.AssetDir("htdocs")))
   mux.Handle("/", static)
 
   server := &http.Server{
@@ -37,7 +37,7 @@ func StartWeb(wg sync.WaitGroup) {
   }
   
   log.Println("Webservice will start on", listenUri)
-  if config.Application.OpenWebUIOnStart {
+  if cfg.Application.OpenWebUIOnStart {
     log.Println("Opening web browser…")
     // TODO: Create proper welcome page
     webbrowser.Open(fmt.Sprintf("%s",listenUri))

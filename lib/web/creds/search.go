@@ -48,6 +48,7 @@ func SearchCredHandler(w http.ResponseWriter, r *http.Request) {
   json, _ := marshaler.MarshalToString(searchResult)
 
   w.Header().Set("Content-Type", "application/json")
+  w.Header().Set("Access-Control-Allow-Origin", "*")
   w.WriteHeader(http.StatusOK)
   io.WriteString(w, json)
 }

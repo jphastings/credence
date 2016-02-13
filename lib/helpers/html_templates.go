@@ -5,13 +5,14 @@ import (
   "io/ioutil"
   "path/filepath"
   "html/template"
+  "github.com/jphastings/credence/lib/config"
   "github.com/jphastings/credence/lib/web/view_models"
 )
 
 var templates = make(map[string]*template.Template)
 
 func init() {
-  paths, _ := filepath.Glob("templates/*.tpl.html")
+  paths, _ := filepath.Glob(filepath.Join(config.AssetDir("templates"), "*.tpl.html"))
   for _, path := range paths {
     data, _ := ioutil.ReadFile(path)
     name := path[10:len(path)-9]
